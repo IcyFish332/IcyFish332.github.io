@@ -22,7 +22,7 @@ Currently, I'm an intern at [LINs Lab](https://lins-lab.github.io) of [Westlake 
 
 Starting in Fall 2025, I will be pursuing a PhD in Computer Science and Technology through a joint PhD program between Zhejiang University and Westlake University under the supervision of Prof. Lin.
 
-## Research Interests
+### Research Interests
 
 - Collaborative LLM-based Multi-Agent System (MAS) (see [MorphAgent](https://arxiv.org/abs/2410.15048))
 - Self-play RL and LLM Alignment (I'm still learning it!)
