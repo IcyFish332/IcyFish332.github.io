@@ -17,4 +17,12 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 ---
 
-Hello! I'm Siyuan Lu, a passionate Internet of Things (IoT) student from the Beijing University of Post and Telecommunications (BUPT), currently engaged in a joint program with Queen Mary University of London (QMUL). Currently, I'm an intern at AIBox Lab, focusing on NLP and AI under Professor [Wayne Xin Zhao](https://scholar.google.com/citations?user=JNhNacoAAAAJ&hl=en&oi=sra) at Renmin University of China (RUC). My research interests have led me to contribute to papers on large language models. With a deep skill set in programming languages, data analysis, and deep learning tools, I aim to explore and share insights on the evolving landscape of technology and AI.
+Hello! I'm Siyuan Lu, an undergraduate student from the Beijing University of Post and Telecommunications (BUPT), engaged in a joint program with Queen Mary University of London (QMUL). 
+Currently, I'm an intern at [LINs Lab](https://lins-lab.github.io) of [Westlake University](https://en.westlake.edu.cn), advised by [Prof. Tao LIN](https://tlin-taolin.github.io). 
+
+Starting in Fall 2025, I will be pursuing a PhD in Computer Science and Technology through a joint PhD program between Zhejiang University and Westlake University under the supervision of Prof. Lin.
+
+## Research Interests
+
+- Collaborative LLM-based Multi-Agent System (MAS) (see [MorphAgent](https://arxiv.org/abs/2410.15048))
+- Self-play RL and LLM Alignment (I'm still learning it!)

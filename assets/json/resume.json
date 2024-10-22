@@ -21,16 +21,46 @@
       }
     ]
   },
-  "work": [],
+  "work": [
+    {
+      "company": "LINs Lab, Westlake University",
+      "position": "Intern",
+      "website": "https://lins-lab.github.io",
+      "startDate": "2024-03",
+      "endDate": "Present",
+      "summary": "Working under the guidance of Prof. Tao Lin on a Multi-Agent System (MAS) project. Recently submitted a paper related to the project.",
+      "highlights": []
+    },
+    {
+      "company": "AIBox Lab, Renmin University of China",
+      "position": "Intern",
+      "website": "http://aibox.ruc.edu.cn",
+      "startDate": "2023-03",
+      "endDate": "2024-03",
+      "summary": "Worked under Prof. Wayne Xin Zhao, maintaining projects and contributing to a paper",
+      "highlights": []
+    }
+  ],
   "volunteer": [],
   "education": [
     {
       "institution": "Beijing University of Post and Telecommunications (BUPT)",
-      "area": "Beijing, China",
+      "url": "",
+      "area": "Internet of Things",
       "studyType": "Bachelor",
       "startDate": "2021-09",
-      "endDate": "2025-06",
-      "gpa": "3.77/4.0 (Rank: 8/179)",
+      "endDate": "2025-06 (Expected)",
+      "score": "90.49/100 (Rank: 10/183)",
+      "courses": []
+    },
+    {
+      "institution": "Westlake University & Zhejiang University",
+      "url": "",
+      "area": "Computer Science and Technology",
+      "studyType": "PhD",
+      "startDate": "2025-09 (Expected)",
+      "endDate": "",
+      "score": "",
       "courses": []
     }
   ],
@@ -50,18 +80,25 @@
   ],
   "publications": [
     {
+      "name": "MorphAgent: Empowering Agents through Self-Evolving Profiles and Decentralized Collaboration",
+      "publisher": "",
+      "releaseDate": "",
+      "url": "https://arxiv.org/abs/2410.15048",
+      "summary": "First author"
+    },
+    {
       "name": "Unleashing the Potential of Large Language Models as Prompt Optimizers: An Analogical Analysis with Gradient-based Model Optimizers",
       "publisher": "",
       "releaseDate": "",
       "url": "https://arxiv.org/abs/2402.17564",
-      "summary": ""
+      "summary": "Forth author"
     },
     {
       "name": "PreAct: Predicting Future in ReAct Enhances Agent's Planning Ability",
       "publisher": "",
       "releaseDate": "",
       "url": "https://arxiv.org/abs/2402.11534",
-      "summary": ""
+      "summary": "Third author"
     }
   ],
   "skills": [
