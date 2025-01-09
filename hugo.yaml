@@ -57,7 +57,7 @@ params:
     enabled: true # needs to be explicitly set
     title: Siyuan Lu
     subtitle: "A junior Ph.D. student in Artificial Intelligence"
-    imageUrl: "images/avatar.jpg"
+    imageUrl: "images/avatar.png"
     imageWidth: 120
     imageHeight: 120
     #imageTitle: my figure
