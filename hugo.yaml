@@ -80,7 +80,7 @@ params:
     - name: x
       url: "https://x.com/sylvanlu?s=21"
     - name: email
-      url: "lusiyuanzs@gmail.com"
+      url: "mailto:lusiyuanzs+blog@gmail.com"
 
   analytics:
     google:
