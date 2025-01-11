@@ -16,6 +16,9 @@ taxonomies:
   tag: "tags"
   category: "categories"
 
+outputs:
+  home: ["HTML", "RSS", "JSON"]
+
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
   title: "Siyuan Lu's Blog"
@@ -115,14 +118,18 @@ params:
     minMatchCharLength: 0
     limit: 10 # refer: https://www.fusejs.io/api/methods.html#search
     keys: ["title", "permalink", "summary", "content"]
+
 menu:
   main:
     - identifier: about
       name: About
       url: /about/
       weight: 10
-    - identifier: blogs
-      name: Blogs
+    - name: "Publications"
+      url: "/publication/"
+      weight: 13
+    - identifier: posts
+      name: Posts
       url: /posts/
       weight: 15
     - identifier: archive
@@ -138,7 +145,6 @@ menu:
       url: /search/
       weight: 30
 
-    
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 pygmentsUseClasses: true
 markup:
@@ -149,3 +155,6 @@ markup:
     # guessSyntax: true
     # lineNos: true
     # style: monokai
+  goldmark:
+    renderer:
+      unsafe: true
