@@ -1,7 +1,7 @@
 ---
 date: '2025-01-09T23:16:37+08:00'
 draft: false
-title: ''
+title: 'About me'
 ShowReadingTime: false
 disableShare: true
 ShowPostNavLinks: false
@@ -14,21 +14,13 @@ hideSummary: true
 showtoc: false
 ---
 
-
-<div style="display: flex; align-items: center; gap: 10px;">
-  <h1 style="margin: 0;">About me</h1>
-  <span onclick="window.open('/pdf/cv.pdf', '_blank')" style="cursor: pointer;">
-    <img src="https://img.shields.io/badge/CV-Download-blue" alt="CV">
-  </span>
-</div>
-
-<br>
-
 Hello! I'm **Siyuan Lu**, an undergraduate student from [Beijing University of Post and Telecommunications](https://www.bupt.edu.cn/), engaged in a joint program with [Queen Mary University of London](https://www.qmul.ac.uk/). 
 
 Starting in Fall 2025, I will be pursuing a PhD in Computer Science and Technology through a joint program between [Zhejiang University](https://www.zju.edu.cn/english/), [Westlake University](https://en.westlake.edu.cn), and [Shanghai Innovation Institute](https://admissions.sii.edu.cn/). I am honored to be part of the institute’s second PhD cohort, working under the supervision of [Prof. Tao LIN](https://tlin-taolin.github.io) from Westlake University and [Prof. Weinan Zhang](https://wnzhang.net/) from [Shanghai Jiao Tong University](https://en.sjtu.edu.cn/).
 
 🔭 **My long-term research goal**: Based on a well-modeled world model of the physical world 🌍, build a self-evolving agent system 🤖 which can continuously receive multi-modal feedback 📄🎨🎥 (e.g., text, audio, images, video, 3D data) from the world 🌏 and adapt to its changing environment 🌟.
+
+Check out my detailed [![CV](https://img.shields.io/badge/CV-here-blue)](/pdf/cv.pdf).
 
 ---
 
