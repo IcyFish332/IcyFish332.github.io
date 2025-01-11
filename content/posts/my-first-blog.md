@@ -2,6 +2,7 @@
 date: '2025-01-10T00:15:42+08:00'
 draft: false
 title: 'My First Blog'
+tags : ["Guide"]
 ---
 
 Welcome to my first blog post! 🎉

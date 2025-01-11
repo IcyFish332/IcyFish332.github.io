@@ -12,6 +12,10 @@ minify:
   disableXML: true
   minifyOutput: true
 
+taxonomies:
+  tag: "tags"
+  category: "categories"
+
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
   title: "Siyuan Lu's Blog"
@@ -120,7 +124,21 @@ menu:
     - identifier: blogs
       name: Blogs
       url: /posts/
+      weight: 15
+    - identifier: archive
+      name: Archive
+      url: /archive/
       weight: 20
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 25
+    - identifier: search
+      name: Search
+      url: /search/
+      weight: 30
+
+    
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 pygmentsUseClasses: true
 markup:
