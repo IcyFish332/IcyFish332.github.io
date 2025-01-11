@@ -20,7 +20,12 @@ Starting in Fall 2025, I will be pursuing a PhD in Computer Science and Technolo
 
 🔭 **My long-term research goal**: Based on a well-modeled world model of the physical world 🌍, build a self-evolving agent system 🤖 which can continuously receive multi-modal feedback 📄🎨🎥 (e.g., text, audio, images, video, 3D data) from the world 🌏 and adapt to its changing environment 🌟.
 
-Check out my detailed [![CV](https://img.shields.io/badge/CV-here-blue)](/pdf/cv.pdf).
+<div style="display: flex; align-items: center; gap: 5px;">
+  <span style="font-weight: bold; text-decoration: underline;">Check out my detailed</span>
+  <a href="/pdf/cv.pdf" target="_blank" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/CV-here-blue" alt="CV">
+  </a>
+</div>
 
 ---
 
