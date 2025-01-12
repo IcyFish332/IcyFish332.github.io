@@ -85,7 +85,7 @@ params:
     - name: github
       url: "https://github.com/IcyFish332"
     - name: x
-      url: "https://x.com/sylvanlu?s=21"
+      url: "https://x.com/sylvanlu"
     - name: email
       url: "mailto:lusiyuanzs+blog@gmail.com"
 
