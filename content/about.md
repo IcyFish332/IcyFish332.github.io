@@ -29,7 +29,7 @@ Starting in Fall 2025, I will be pursuing a PhD in Computer Science and Technolo
 
 ---
 
-### Research Interests
+### 🎯 Research Interests
 
 - LLM-based Multi-Agent System (MAS) (See [MorphAgent](https://arxiv.org/abs/2410.15048))
 - Self-evolving Agent (I'm still learning it!)
@@ -37,7 +37,7 @@ Starting in Fall 2025, I will be pursuing a PhD in Computer Science and Technolo
 ---
 
 <div style="display: flex; align-items: center; gap: 10px;">
-  <h3 style="margin: 0;">Selected Publications</h3>
+  <h3 style="margin: 0;">📚 Selected Publications</h3>
   <span onclick="window.open('https://scholar.google.com/citations?user=nnBAokkAAAAJ&hl=en', '_blank')" style="cursor: pointer;">
     <img src="https://img.shields.io/badge/Google%20Scholar-Profile-blue?logo=googlescholar" alt="Google Scholar">
   </span>
@@ -90,7 +90,7 @@ You can find the full list of my publications [here](/publication/).
 
 ---
 
-### Education
+### 🎓 Education
 
 - **Westlake University & Zhejiang University Co-PhD Promgram**
   
@@ -104,7 +104,7 @@ You can find the full list of my publications [here](/publication/).
 
 ---
 
-### Work Experience
+### 💼 Work Experience
 
 - **LINs Lab, Westlake University** (2024.03 - Present)
   - Intern working under Prof. Tao Lin on a Multi-Agent System (MAS) project.
@@ -114,8 +114,10 @@ You can find the full list of my publications [here](/publication/).
 
 ---
 
-### Skills
+### 🌟 A Note About My Name
+My full name in Chinese is **路(Lu)思远(Siyuan)**. Here's the meaning behind it:  
+- **路 (Lu):** A "road" or "path," symbolizing journey, exploration, and progress.  
+- **思 (Si):** "Thinking" or "reflection," emphasizing critical thinking and creativity.  
+- **远 (Yuan):** "Long-term" or "vision," signifying ambition and foresight.  
 
-- **Programming Languages**: Python, C, C++, Java
-- **Data Analysis Tools**: Pandas, NumPy, Matplotlib, SQL, Excel
-- **Deep Learning Tools**: PyTorch, Hugging Face Transformers
+Together, **路思远** reflects the philosophy of pursuing **long-term goals with thoughtful planning and a forward-looking mindset**—a principle I strive to embody in both my personal and professional life.

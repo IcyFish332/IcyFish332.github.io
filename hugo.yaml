@@ -25,7 +25,7 @@ params:
   description: "A blog by Siyuan Lu sharing research interests, projects, and personal insights." # The default site description for SEO.
   keywords: [Research, Blog, Computer Science, Artificial Intelligence] # Keywords for SEO optimization.
   author: "Siyuan Lu" # Default author of the website.
-  images: ["images/search.png"] # Default Open Graph image for SEO.
+  images: ["images/avatar.png"] # Default Open Graph image for SEO.
   DateFormat: "January 2, 2006"
   defaultTheme: auto # dark, light
   disableThemeToggle: false
@@ -47,16 +47,16 @@ params:
   tocopen: true
 
   assets:
-    favicon: "/favicon.ico" 
-    favicon16x16: "/favicon-16x16.png" 
-    favicon32x32: "/favicon-32x32.png" 
-    apple_touch_icon: "/apple-touch-icon.png" 
-    android_chrome192: "/android-chrome-192x192.png" 
-    android_chrome512: "/android-chrome-512x512.png" 
+    favicon: "favicon/favicon.ico" 
+    favicon16x16: "favicon/favicon-16x16.png" 
+    favicon32x32: "favicon/favicon-32x32.png" 
+    apple_touch_icon: "favicon/apple-touch-icon.png" 
+    android_chrome192: "favicon/android-chrome-192x192.png" 
+    android_chrome512: "favicon/android-chrome-512x512.png" 
 
   label:
     text: "Home"
-    icon: /apple-touch-icon.png
+    icon: favicon/apple-touch-icon.png
     iconHeight: 35
 
   # profile-mode
