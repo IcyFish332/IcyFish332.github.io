@@ -65,9 +65,9 @@ params:
     title: Siyuan Lu
     subtitle: "A junior Ph.D. student in Artificial Intelligence"
     imageUrl: "images/avatar.png"
-    imageWidth: 120
-    imageHeight: 120
-    #imageTitle: my figure
+    imageWidth: 200
+    imageHeight: 200
+    imageTitle: "At the Humble Administrator's Garden in Suzhou"
     buttons:
       - name: About
         url: about
@@ -88,6 +88,8 @@ params:
       url: "https://x.com/sylvanlu"
     - name: email
       url: "mailto:lusiyuanzs+blog@gmail.com"
+    - name: rss
+      url: /index.xml
 
   analytics:
     google:
