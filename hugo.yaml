@@ -130,23 +130,23 @@ menu:
     - identifier: publications 
       name: Publications
       url: /publications/
-      weight: 15
+      weight: 12
     - identifier: posts
       name: Posts
       url: /posts/
-      weight: 20
-    # - identifier: archive
-    #   name: Archive
-    #   url: /archive/
-    #   weight: 20
+      weight: 14
+    - identifier: archive
+      name: Archive
+      url: /archive/
+      weight: 16
     - identifier: tags
       name: Tags
       url: /tags/
-      weight: 25
+      weight: 18
     - identifier: search
       name: Search
       url: /search/
-      weight: 30
+      weight: 20
 
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 pygmentsUseClasses: true
