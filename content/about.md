@@ -12,8 +12,6 @@ comments: false
 hidemeta: true
 hideSummary: true
 showtoc: false
-outputs:
-  - html
 ---
 
 Hello! I'm **Siyuan Lu**, an undergraduate student from [Beijing University of Post and Telecommunications](https://www.bupt.edu.cn/), engaged in a joint program with [Queen Mary University of London](https://www.qmul.ac.uk/). 

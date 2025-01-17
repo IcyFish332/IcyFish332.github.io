@@ -11,8 +11,6 @@ comments: false
 hidemeta: true
 hideSummary: true
 showtoc: false
-outputs:
-  - html
 ---
 
 *Equal contributions. †Corresponding author
