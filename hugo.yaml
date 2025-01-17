@@ -17,8 +17,7 @@ taxonomies:
   category: "categories"
 
 outputs:
-  home: ["HTML", "RSS", "JSON"]
-  page: ["HTML"]                   
+  home: ["HTML", "RSS", "JSON"]                
   section:
     posts: ["HTML", "RSS", "JSON"] 
     about: ["HTML"]                
