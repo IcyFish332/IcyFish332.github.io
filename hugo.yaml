@@ -18,6 +18,11 @@ taxonomies:
 
 outputs:
   home: ["HTML", "RSS", "JSON"]
+  page: ["HTML"]                   
+  section:
+    posts: ["HTML", "RSS", "JSON"] 
+    about: ["HTML"]                
+    publication: ["HTML"]          
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
@@ -127,8 +132,9 @@ menu:
       name: About
       url: /about/
       weight: 10
-    - name: "Publications"
-      url: "/publication/"
+    - identifier: publications 
+      name: Publications
+      url: /publications/
       weight: 13
     - identifier: posts
       name: Posts
