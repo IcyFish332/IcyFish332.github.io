@@ -17,7 +17,7 @@ showtoc: false
 
 <ul>
   <li style="margin-bottom: 10px;">
-    <b><u>MorphAgent: Empowering Agents through Self-Evolving Profiles and Decentralized Collaboration</u></b><br>
+    <b>MorphAgent: Empowering Agents through Self-Evolving Profiles and Decentralized Collaboration</b><br>
     <i><b>Siyuan Lu*</b></i>, <i>Jiaqi Shao*</i>, <i>Bing Luo†</i>, <i>Tao Lin†</i><br>
     <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
       <span onclick="window.open('https://arxiv.org/abs/2410.15048', '_blank')" style="cursor: pointer;">
@@ -29,7 +29,7 @@ showtoc: false
     </div>
   </li>
   <li style="margin-bottom: 10px;">
-    <b><u>Unleashing the Potential of Large Language Models as Prompt Optimizers</u></b><br>
+    <b>Unleashing the Potential of Large Language Models as Prompt Optimizers</b><br>
     <i>Xinyu Tang*</i>, <i>Xiaolei Wang*</i>, <i>Wayne Xin Zhao†</i>, <i><b>Siyuan Lu</b></i>, <i>Yaliang Li</i>, <i>Ji-Rong Wen</i><br>
     AAAI 2025<br>
     <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
@@ -42,7 +42,7 @@ showtoc: false
     </div>
   </li>
   <li style="margin-bottom: 10px;">
-    <b><u>PreAct: Predicting Future in ReAct Enhances Agent's Planning Ability</u></b><br>
+    <b>PreAct: Predicting Future in ReAct Enhances Agent's Planning Ability</b><br>
     <i>Dayuan Fu</i>, <i>Jianzhao Huang</i>, <i><b>Siyuan Lu</b></i>, <i>Guanting Dong</i>, <i>Yejie Wang</i>, <i>Keqing He</i>, <i>Weiran Xu†</i><br>
     COLING 2025<br>
     <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
