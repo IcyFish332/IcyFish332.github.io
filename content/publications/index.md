@@ -23,9 +23,9 @@ showtoc: false
       <span onclick="window.open('https://arxiv.org/abs/2410.15048', '_blank')" style="cursor: pointer;">
         <img src="https://img.shields.io/badge/arXiv-2410.15048-b31b1b?logo=arXiv" alt="arXiv">
       </span>
-      <span onclick="window.open('https://github.com/LINs-lab/learn2collaborate', '_blank')" style="cursor: pointer;">
+      <!-- <span onclick="window.open('https://github.com/LINs-lab/learn2collaborate', '_blank')" style="cursor: pointer;">
         <img src="https://img.shields.io/github/stars/LINs-lab/learn2collaborate?logo=github&label=LINs-lab/learn2collaborate" alt="GitHub Repo stars">
-      </span>
+      </span> -->
     </div>
   </li>
   <li style="margin-bottom: 10px;">
