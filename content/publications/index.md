@@ -17,6 +17,18 @@ showtoc: false
 
 <ul>
   <li style="margin-bottom: 10px;">
+    <b>AWorld: Orchestrating the Training Recipe for Agentic AI</b><br>
+    <i>Chengyue Yu</i>, <i><b>Siyuan Lu</b></i>, <i>Chenyi Zhuang</i>, <i>Dong Wang</i>, <i>Qintong Wu</i>, <i>Zongyue Li</i>, <i>Runsheng Gan</i>, <i>Chunfeng Wang</i>, <i>Siqi Hou</i>, <i>Gaochi Huang</i>, <i>Wenlong Yan</i>, <i>Lifeng Hong</i>, <i>Aohui Xue</i>, <i>Yanfeng Wang</i>, <i>Jinjie Gu</i>, <i>David Tsai</i>, <i>Tao Lin</i><br>
+    <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
+      <span onclick="window.open('https://arxiv.org/abs/2508.20404', '_blank')" style="cursor: pointer;">
+        <img src="https://img.shields.io/badge/arXiv-2508.20404-b31b1b?logo=arXiv" alt="arXiv">
+      </span>
+      <span onclick="window.open('https://github.com/inclusionAI/AWorld', '_blank')" style="cursor: pointer;">
+        <img src="https://img.shields.io/github/stars/inclusionAI/AWorld?logo=github&label=inclusionAI/AWorld" alt="GitHub Repo stars">
+      </span>
+    </div>
+  </li>
+  <li style="margin-bottom: 10px;">
     <b>MorphAgent: Empowering Agents through Self-Evolving Profiles and Decentralized Collaboration</b><br>
     <i><b>Siyuan Lu*</b></i>, <i>Jiaqi Shao*</i>, <i>Bing Luo†</i>, <i>Tao Lin†</i><br>
     <div style="display: inline-flex; gap: 10px; margin-top: 5px;">

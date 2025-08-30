@@ -14,9 +14,9 @@ hideSummary: true
 showtoc: false
 ---
 
-Hello! I'm **Siyuan Lu**, an undergraduate student from [Beijing University of Post and Telecommunications](https://www.bupt.edu.cn/), engaged in a joint program with [Queen Mary University of London](https://www.qmul.ac.uk/). 
+Hello! I'm **Siyuan Lu**, a PhD student in Computer Science and Technology through a joint program between [Zhejiang University](https://www.zju.edu.cn/english/), [Westlake University](https://en.westlake.edu.cn), and [Shanghai Innovation Institute](https://www.sii.edu.cn/). I am honored to be part of the institute's second PhD cohort, working under the supervision of [Prof. Tao LIN](https://tlin-taolin.github.io) from Westlake University and [Prof. Weinan Zhang](https://wnzhang.net/) from [Shanghai Jiao Tong University](https://en.sjtu.edu.cn/).
 
-Starting in Fall 2025, I will be pursuing a PhD in Computer Science and Technology through a joint program between [Zhejiang University](https://www.zju.edu.cn/english/), [Westlake University](https://en.westlake.edu.cn), and [Shanghai Innovation Institute](https://www.sii.edu.cn/). I am honored to be part of the institute's second PhD cohort, working under the supervision of [Prof. Tao LIN](https://tlin-taolin.github.io) from Westlake University and [Prof. Weinan Zhang](https://wnzhang.net/) from [Shanghai Jiao Tong University](https://en.sjtu.edu.cn/).
+I recently graduated from [Beijing University of Post and Telecommunications](https://www.bupt.edu.cn/) with a Bachelor's degree in Internet of Things Engineering through a joint program with [Queen Mary University of London](https://www.qmul.ac.uk/).
 
 🔭 **My long-term research goal**: Based on a well-modeled world model of the physical world 🌍, build a self-evolving agent system 🤖 which can continuously receive multi-modal feedback 📄🎨🎥 (e.g., text, audio, images, video, 3D data) from the world 🌏 and adapt to its changing environment 🌟.
 
@@ -47,6 +47,18 @@ You can find the full list of my publications [here](/publication/).
 
 <ul>
   <li style="margin-bottom: 10px;">
+    <b>AWorld: Orchestrating the Training Recipe for Agentic AI</b><br>
+    <i>Chengyue Yu</i>, <i><b>Siyuan Lu</b></i>, <i>Chenyi Zhuang</i>, <i>Dong Wang</i>, <i>Qintong Wu</i>, <i>Zongyue Li</i>, <i>Runsheng Gan</i>, <i>Chunfeng Wang</i>, <i>Siqi Hou</i>, <i>Gaochi Huang</i>, <i>Wenlong Yan</i>, <i>Lifeng Hong</i>, <i>Aohui Xue</i>, <i>Yanfeng Wang</i>, <i>Jinjie Gu</i>, <i>David Tsai</i>, <i>Tao Lin</i><br>
+    <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
+      <span onclick="window.open('https://arxiv.org/abs/2508.20404', '_blank')" style="cursor: pointer;">
+        <img src="https://img.shields.io/badge/arXiv-2508.20404-b31b1b?logo=arXiv" alt="arXiv">
+      </span>
+      <span onclick="window.open('https://github.com/inclusionAI/AWorld', '_blank')" style="cursor: pointer;">
+        <img src="https://img.shields.io/github/stars/inclusionAI/AWorld?logo=github&label=inclusionAI/AWorld" alt="GitHub Repo stars">
+      </span>
+    </div>
+  </li>
+  <li style="margin-bottom: 10px;">
     <b>MorphAgent: Empowering Agents through Self-Evolving Profiles and Decentralized Collaboration</b><br>
     <i><b>Siyuan Lu*</b></i>, <i>Jiaqi Shao*</i>, <i>Bing Luo†</i>, <i>Tao Lin†</i><br>
     <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
@@ -56,19 +68,6 @@ You can find the full list of my publications [here](/publication/).
       <!-- <span onclick="window.open('https://github.com/LINs-lab/learn2collaborate', '_blank')" style="cursor: pointer;">
         <img src="https://img.shields.io/github/stars/LINs-lab/learn2collaborate?logo=github&label=LINs-lab/learn2collaborate" alt="GitHub Repo stars">
       </span> -->
-    </div>
-  </li>
-  <li style="margin-bottom: 10px;">
-    <b>Unleashing the Potential of Large Language Models as Prompt Optimizers</b><br>
-    <i>Xinyu Tang*</i>, <i>Xiaolei Wang*</i>, <i>Wayne Xin Zhao†</i>, <i><b>Siyuan Lu</b></i>, <i>Yaliang Li</i>, <i>Ji-Rong Wen</i><br>
-    AAAI 2025<br>
-    <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
-      <span onclick="window.open('https://arxiv.org/abs/2402.17564', '_blank')" style="cursor: pointer;">
-        <img src="https://img.shields.io/badge/arXiv-2402.17564-b31b1b?logo=arXiv" alt="arXiv">
-      </span>
-      <span onclick="window.open('https://github.com/RUCAIBox/GPO', '_blank')" style="cursor: pointer;">
-        <img src="https://img.shields.io/github/stars/RUCAIBox/GPO?logo=github&label=RUCAIBox/GPO" alt="GitHub Repo stars">
-      </span>
     </div>
   </li>
   <li style="margin-bottom: 10px;">
@@ -102,7 +101,7 @@ You can find the full list of my publications [here](/publication/).
 ### 💼 Work Experience
 
 - **[Ant Group](https://www.antgroup.com/en)** (2025.06 - Present)
-  - Research Intern at [InclusionAI](https://github.com/inclusionAI)
+  - Research Intern at <img src="/images/aworld_logo.png" alt="AWorld" style="height: 22px; vertical-align: text-bottom; margin: 0 0px 0 0px; display: inline;"> AWorld Team, [InclusionAI](https://github.com/inclusionAI)
   - Mentor: [Chenyi Zhuang](https://www.linkedin.com/in/chenyi-zhuang-8379b123)
 
 ---
