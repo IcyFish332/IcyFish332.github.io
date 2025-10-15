@@ -17,6 +17,15 @@ showtoc: false
 
 <ul>
   <li style="margin-bottom: 10px;">
+    <b>Don't Just Fine-tune the Agent, Tune the Environment</b><br>
+    <i><b>Siyuan Lu*</b></i>, <i>Zechuan Wang*</i>, <i>Hongxuan Zhang</i>, <i>Qintong Wu</i>, <i>Leilei Gan†</i>, <i>Chenyi Zhuang†</i>, <i>Jinjie Gu</i>, <i>Tao Lin†</i><br>
+    <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
+      <span onclick="window.open('https://arxiv.org/abs/2510.10197', '_blank')" style="cursor: pointer;">
+        <img src="https://img.shields.io/badge/arXiv-2510.10197-b31b1b?logo=arXiv" alt="arXiv">
+      </span>
+    </div>
+  </li>
+  <li style="margin-bottom: 10px;">
     <b>AWorld: Orchestrating the Training Recipe for Agentic AI</b><br>
     <i>Chengyue Yu*</i>, <i><b>Siyuan Lu*</b></i>, <i>Chenyi Zhuang†</i>, <i>Dong Wang</i>, <i>Qintong Wu</i>, <i>Zongyue Li</i>, <i>Runsheng Gan</i>, <i>Chunfeng Wang</i>, <i>Siqi Hou</i>, <i>Gaochi Huang</i>, <i>Wenlong Yan</i>, <i>Lifeng Hong</i>, <i>Aohui Xue</i>, <i>Yanfeng Wang</i>, <i>Jinjie Gu</i>, <i>David Tsai</i>, <i>Tao Lin</i><br>
     <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
@@ -31,6 +40,7 @@ showtoc: false
   <li style="margin-bottom: 10px;">
     <b>You Don't Know Until You Click: Automated GUI Testing for Production-Ready Software Evaluation</b><br>
     <i>Yutong Bian</i>, <i>Xianhao Lin</i>, <i>Yupeng Xie</i>, <i>Tianyang Liu</i>, <i>Mingchen Zhuge</i>, <i><b>Siyuan Lu</b></i>, <i>Haoming Tang</i>, <i>Jinlin Wang</i>, <i>Jiayi Zhang</i>, <i>Jiaqi Chen</i>, <i>Xiangru Tang</i>, <i>Yongxin Ni</i>, <i>Sirui Hong</i>, <i>Chenglin Wu†</i><br>
+    NeurIPS 2025 SEA workshop<br>
     <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
       <span onclick="window.open('https://arxiv.org/abs/2508.14104', '_blank')" style="cursor: pointer;">
         <img src="https://img.shields.io/badge/arXiv-2508.14104-b31b1b?logo=arXiv" alt="arXiv">
@@ -43,6 +53,7 @@ showtoc: false
   <li style="margin-bottom: 10px;">
     <b>MorphAgent: Empowering Agents through Self-Evolving Profiles and Decentralized Collaboration</b><br>
     <i><b>Siyuan Lu*</b></i>, <i>Jiaqi Shao*</i>, <i>Bing Luo†</i>, <i>Tao Lin†</i><br>
+    ICML 2025 MAS workshop<br>
     <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
       <span onclick="window.open('https://arxiv.org/abs/2410.15048', '_blank')" style="cursor: pointer;">
         <img src="https://img.shields.io/badge/arXiv-2410.15048-b31b1b?logo=arXiv" alt="arXiv">

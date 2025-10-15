@@ -47,6 +47,18 @@ You can find the full list of my publications [here](/publication/).
 
 <ul>
   <li style="margin-bottom: 10px;">
+    <b>Don't Just Fine-tune the Agent, Tune the Environment</b><br>
+    <i><b>Siyuan Lu*</b></i>, <i>Zechuan Wang*</i>, <i>Hongxuan Zhang</i>, <i>Qintong Wu</i>, <i>Leilei Gan†</i>, <i>Chenyi Zhuang†</i>, <i>Jinjie Gu</i>, <i>Tao Lin†</i><br>
+    <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
+      <span onclick="window.open('https://arxiv.org/abs/2510.10197', '_blank')" style="cursor: pointer;">
+        <img src="https://img.shields.io/badge/arXiv-2510.10197-b31b1b?logo=arXiv" alt="arXiv">
+      </span>
+      <!-- <span onclick="window.open('https://github.com/inclusionAI', '_blank')" style="cursor: pointer;">
+        <img src="https://img.shields.io/badge/Code-Coming%20Soon-gray?logo=github" alt="Code Coming Soon">
+      </span> -->
+    </div>
+  </li>
+  <li style="margin-bottom: 10px;">
     <b>AWorld: Orchestrating the Training Recipe for Agentic AI</b><br>
     <i>Chengyue Yu*</i>, <i><b>Siyuan Lu*</b></i>, <i>Chenyi Zhuang†</i>, <i>Dong Wang</i>, <i>Qintong Wu</i>, <i>Zongyue Li</i>, <i>Runsheng Gan</i>, <i>Chunfeng Wang</i>, <i>Siqi Hou</i>, <i>Gaochi Huang</i>, <i>Wenlong Yan</i>, <i>Lifeng Hong</i>, <i>Aohui Xue</i>, <i>Yanfeng Wang</i>, <i>Jinjie Gu</i>, <i>David Tsai</i>, <i>Tao Lin</i><br>
     <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
@@ -68,18 +80,6 @@ You can find the full list of my publications [here](/publication/).
       <span onclick="window.open('https://github.com/tanghaom/AppEvalPilot', '_blank')" style="cursor: pointer;">
         <img src="https://img.shields.io/github/stars/tanghaom/AppEvalPilot?logo=github&label=tanghaom/AppEvalPilot" alt="GitHub Repo stars">
       </span>
-    </div>
-  </li>
-  <li style="margin-bottom: 10px;">
-    <b>MorphAgent: Empowering Agents through Self-Evolving Profiles and Decentralized Collaboration</b><br>
-    <i><b>Siyuan Lu*</b></i>, <i>Jiaqi Shao*</i>, <i>Bing Luo†</i>, <i>Tao Lin†</i><br>
-    <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
-      <span onclick="window.open('https://arxiv.org/abs/2410.15048', '_blank')" style="cursor: pointer;">
-        <img src="https://img.shields.io/badge/arXiv-2410.15048-b31b1b?logo=arXiv" alt="arXiv">
-      </span>
-      <!-- <span onclick="window.open('https://github.com/LINs-lab/learn2collaborate', '_blank')" style="cursor: pointer;">
-        <img src="https://img.shields.io/github/stars/LINs-lab/learn2collaborate?logo=github&label=LINs-lab/learn2collaborate" alt="GitHub Repo stars">
-      </span> -->
     </div>
   </li>
 </ul>
