@@ -441,12 +441,92 @@
     top: 0.55em;
     background: var(--warm-gray-light);
   }
+
+  /* Overview grid */
+  .overview-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--charcoal);
+    z-index: 10000;
+    overflow-y: auto;
+    padding: 2.5vh 3vw;
+    display: none;
+  }
+  .overview-overlay.open { display: block; }
+
+  .overview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2vh;
+    padding: 0 0.5vw;
+  }
+  .overview-header h2 {
+    font-family: var(--font-en);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--warm-gray-light);
+    margin: 0;
+  }
+  .overview-header .overview-close {
+    font-family: var(--font-en);
+    font-size: 0.75rem;
+    color: var(--warm-gray);
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.6vw;
+  }
+
+  .overview-thumb {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .overview-thumb:hover {
+    border-color: var(--ink-blue-light);
+    box-shadow: 0 4px 20px rgba(43,76,111,0.3);
+  }
+  .overview-thumb.is-current {
+    border-color: var(--ink-blue);
+    box-shadow: 0 0 0 3px rgba(43,76,111,0.25);
+  }
+
+  .overview-thumb-inner {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1920px;
+    height: 1200px;
+    transform-origin: top left;
+    pointer-events: none;
+  }
+
+  .overview-thumb-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0.4em 0.6em;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    font-family: var(--font-en);
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.04em;
+  }
 </style>
 </head>
 <body>
 
 <div class="progress-bar" id="progress"></div>
-<div class="nav-hint" id="navHint">← →  or  space</div>
+<div class="nav-hint" id="navHint">← →  or  space  ·  G = overview</div>
 
 <div class="deck" id="deck">
 
@@ -1318,6 +1398,7 @@
   const navHint = document.getElementById('navHint');
   let current = 0;
   const total = slides.length;
+  let overviewEl = null;
 
   function goTo(n) {
     if (n < 0 || n >= total) return;
@@ -1325,10 +1406,101 @@
     current = n;
     slides[current].classList.add('active');
     progress.style.width = ((current + 1) / total * 100) + '%';
+    history.replaceState(null, '', '#slide=' + (current + 1));
     if (current > 0 && navHint) { navHint.style.display = 'none'; }
   }
 
+  // Overview grid
+  function buildOverview() {
+    if (overviewEl) { openOverview(); return; }
+    overviewEl = document.createElement('div');
+    overviewEl.className = 'overview-overlay';
+
+    var header = document.createElement('div');
+    header.className = 'overview-header';
+    header.innerHTML = '<h2>Slide Overview</h2><span class="overview-close">ESC / G to close</span>';
+    header.querySelector('.overview-close').addEventListener('click', closeOverview);
+    overviewEl.appendChild(header);
+
+    var grid = document.createElement('div');
+    grid.className = 'overview-grid';
+
+    for (var i = 0; i < total; i++) {
+      (function(idx) {
+        var thumb = document.createElement('div');
+        thumb.className = 'overview-thumb';
+        thumb.dataset.idx = idx;
+
+        var inner = document.createElement('div');
+        inner.className = 'overview-thumb-inner';
+        var clone = slides[idx].cloneNode(true);
+        clone.classList.add('active');
+        clone.style.position = 'relative';
+        clone.style.width = '1920px';
+        clone.style.height = '1200px';
+        inner.appendChild(clone);
+        thumb.appendChild(inner);
+
+        var label = document.createElement('div');
+        label.className = 'overview-thumb-label';
+        var title = slides[idx].querySelector('h1, h2');
+        label.textContent = (idx + 1) + ' / ' + total + (title ? '  —  ' + title.textContent.replace(/\s+/g, ' ').substring(0, 40) : '');
+        thumb.appendChild(label);
+
+        thumb.addEventListener('click', function() {
+          goTo(idx);
+          closeOverview();
+        });
+        grid.appendChild(thumb);
+      })(i);
+    }
+
+    overviewEl.appendChild(grid);
+    document.body.appendChild(overviewEl);
+    openOverview();
+  }
+
+  function openOverview() {
+    // Mark current slide
+    var thumbs = overviewEl.querySelectorAll('.overview-thumb');
+    thumbs.forEach(function(t) { t.classList.toggle('is-current', parseInt(t.dataset.idx) === current); });
+
+    // Calculate scale based on actual thumb width
+    overviewEl.classList.add('open');
+    requestAnimationFrame(function() {
+      var firstThumb = overviewEl.querySelector('.overview-thumb');
+      if (firstThumb) {
+        var thumbW = firstThumb.offsetWidth;
+        var scale = thumbW / 1920;
+        overviewEl.querySelectorAll('.overview-thumb-inner').forEach(function(el) {
+          el.style.transform = 'scale(' + scale + ')';
+        });
+        // Set thumb height to match aspect ratio
+        overviewEl.querySelectorAll('.overview-thumb').forEach(function(el) {
+          el.style.height = (1200 * scale) + 'px';
+        });
+      }
+      // Scroll current into view
+      var cur = overviewEl.querySelector('.is-current');
+      if (cur) cur.scrollIntoView({ block: 'center', behavior: 'instant' });
+    });
+  }
+
+  function closeOverview() {
+    if (overviewEl) overviewEl.classList.remove('open');
+  }
+
+  function isOverviewOpen() {
+    return overviewEl && overviewEl.classList.contains('open');
+  }
+
   document.addEventListener('keydown', function(e) {
+    if (isOverviewOpen()) {
+      if (e.key === 'Escape' || e.key === 'g' || e.key === 'G') {
+        e.preventDefault(); closeOverview();
+      }
+      return;
+    }
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
       e.preventDefault(); goTo(current + 1);
     } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
@@ -1337,26 +1509,37 @@
       e.preventDefault(); goTo(0);
     } else if (e.key === 'End') {
       e.preventDefault(); goTo(total - 1);
+    } else if (e.key === 'g' || e.key === 'G') {
+      e.preventDefault(); buildOverview();
+    } else if (e.key === 'Escape') {
+      e.preventDefault(); closeOverview();
     }
   });
 
   // Touch support
   let touchStartX = 0;
-  document.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchstart', function(e) {
+    if (isOverviewOpen()) return;
+    touchStartX = e.touches[0].clientX;
+  });
   document.addEventListener('touchend', function(e) {
+    if (isOverviewOpen()) return;
     const dx = e.changedTouches[0].clientX - touchStartX;
     if (Math.abs(dx) > 50) { dx < 0 ? goTo(current + 1) : goTo(current - 1); }
   });
 
   // Click on right/left half (skip if clicking a link)
   document.addEventListener('click', function(e) {
+    if (isOverviewOpen()) return;
     if (e.target.closest('a')) return;
     if (e.clientX > window.innerWidth * 0.6) goTo(current + 1);
     else if (e.clientX < window.innerWidth * 0.4) goTo(current - 1);
   });
 
-  // Init
-  goTo(0);
+  // Init: restore from hash or start at slide 1
+  var hashMatch = location.hash.match(/slide=(\d+)/);
+  var startSlide = hashMatch ? Math.max(0, Math.min(parseInt(hashMatch[1]) - 1, total - 1)) : 0;
+  goTo(startSlide);
 })();
 </script>
 </body>
