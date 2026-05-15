@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post-Training Paradigms: SFT, RL & On-Policy Distillation</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap');
+
+  :root {
+    --parchment: #f4ede4;
+    --parchment-light: #faf6f0;
+    --ink-blue: #2b4c6f;
+    --ink-blue-light: #3d6a96;
+    --ink-blue-faint: rgba(43,76,111,0.08);
+    --charcoal: #2d2a26;
+    --warm-gray: #6b6460;
+    --warm-gray-light: #9e9590;
+    --accent-red: #8b3a3a;
+    --accent-gold: #a68a56;
+    --rule-color: rgba(43,76,111,0.25);
+    --font-cn: 'Noto Serif SC', 'Songti SC', 'Source Han Serif SC', 'SimSun', serif;
+    --font-en: Charter, 'Bitstream Charter', 'Georgia', 'Noto Serif SC', serif;
+    --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--charcoal);
+  }
+
+  .deck {
+    width: 100%; height: 100%;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: var(--parchment);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5vh 8vw;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Slide number */
+  .slide::after {
+    content: attr(data-num);
+    position: absolute;
+    bottom: 3vh;
+    right: 4vw;
+    font-family: var(--font-en);
+    font-size: 0.85rem;
+    color: var(--warm-gray-light);
+    letter-spacing: 0.05em;
+  }
+
+  /* Section label */
+  .section-label {
+    position: absolute;
+    top: 3.5vh;
+    left: 8vw;
+    font-family: var(--font-en);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-blue-light);
+  }
+
+  /* Typography */
+  h1 {
+    font-family: var(--font-cn);
+    font-weight: 900;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    color: var(--charcoal);
+    line-height: 1.3;
+    margin-bottom: 0.5em;
+  }
+
+  h2 {
+    font-family: var(--font-cn);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+    color: var(--charcoal);
+    line-height: 1.35;
+    margin-bottom: 0.6em;
+  }
+
+  h3 {
+    font-family: var(--font-cn);
+    font-weight: 600;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    color: var(--ink-blue);
+    line-height: 1.4;
+    margin-bottom: 0.5em;
+  }
+
+  p, li {
+    font-family: var(--font-cn);
+    font-size: clamp(0.95rem, 1.35vw, 1.15rem);
+    color: var(--charcoal);
+    line-height: 1.75;
+  }
+
+  .en {
+    font-family: var(--font-en);
+  }
+
+  .term {
+    font-family: var(--font-en);
+    font-style: italic;
+    color: var(--ink-blue);
+  }
+
+  .highlight {
+    color: var(--accent-red);
+    font-weight: 700;
+  }
+
+  .muted {
+    color: var(--warm-gray);
+    font-size: 0.92em;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  ul li {
+    position: relative;
+    padding-left: 1.4em;
+    margin-bottom: 0.55em;
+  }
+
+  ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink-blue);
+  }
+
+  .rule {
+    width: 60px;
+    height: 2px;
+    background: var(--ink-blue);
+    margin: 1.2em 0;
+    border: none;
+  }
+
+  .rule-wide {
+    width: 100%;
+    height: 1px;
+    background: var(--rule-color);
+    margin: 1em 0;
+    border: none;
+  }
+
+  /* Layout helpers */
+  .center-all {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4vw;
+    align-items: center;
+  }
+
+  .two-col-text-img {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 3.5vw;
+    align-items: center;
+  }
+
+  .two-col-img-text {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 3.5vw;
+    align-items: center;
+  }
+
+  .col { display: flex; flex-direction: column; }
+
+  /* Images */
+  .fig {
+    width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+
+  .fig-center {
+    display: block;
+    margin: 1em auto;
+    max-width: 80%;
+    max-height: 50vh;
+    border-radius: 6px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+
+  .fig-large {
+    display: block;
+    margin: 0.8em auto;
+    max-width: 90%;
+    max-height: 55vh;
+    border-radius: 6px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+
+  .fig-small {
+    display: block;
+    margin: 0.6em auto;
+    max-width: 65%;
+    max-height: 40vh;
+    border-radius: 6px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+
+  figcaption {
+    font-family: var(--font-cn);
+    font-size: 0.8rem;
+    color: var(--warm-gray);
+    text-align: center;
+    margin-top: 0.5em;
+  }
+
+  /* Blockquote / callout */
+  .callout {
+    border-left: 3px solid var(--ink-blue);
+    padding: 0.8em 1.2em;
+    background: var(--ink-blue-faint);
+    border-radius: 0 6px 6px 0;
+    margin: 0.8em 0;
+  }
+
+  .callout p {
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  }
+
+  /* Title slide special */
+  .slide-title {
+    background: var(--charcoal);
+    justify-content: flex-end;
+    padding-bottom: 12vh;
+  }
+
+  .slide-title h1 {
+    color: var(--parchment);
+    font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+    margin-bottom: 0.3em;
+  }
+
+  .slide-title .subtitle {
+    font-family: var(--font-en);
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    color: var(--warm-gray-light);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4em;
+  }
+
+  .slide-title .meta {
+    font-family: var(--font-en);
+    font-size: 0.85rem;
+    color: var(--warm-gray);
+    letter-spacing: 0.04em;
+  }
+
+  .slide-title::after { color: rgba(255,255,255,0.2); }
+
+  /* Section divider slide */
+  .slide-section {
+    background: var(--ink-blue);
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .slide-section .section-num {
+    font-family: var(--font-en);
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 900;
+    color: rgba(255,255,255,0.12);
+    line-height: 1;
+    margin-bottom: 0.15em;
+  }
+
+  .slide-section h2 {
+    color: var(--parchment);
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  }
+
+  .slide-section p {
+    color: rgba(244,237,228,0.7);
+    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+    max-width: 70%;
+  }
+
+  .slide-section::after { color: rgba(255,255,255,0.15); }
+  .slide-section .section-label { color: rgba(255,255,255,0.3); }
+
+  /* Closing slide */
+  .slide-closing {
+    background: var(--charcoal);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .slide-closing h2 { color: var(--parchment); }
+  .slide-closing p { color: var(--warm-gray-light); max-width: 70%; }
+  .slide-closing::after { color: rgba(255,255,255,0.2); }
+
+  /* Outline chips */
+  .outline-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em 3vw;
+    margin-top: 0.5em;
+  }
+
+  .outline-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7em;
+  }
+
+  .outline-item .num {
+    font-family: var(--font-en);
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--ink-blue);
+    line-height: 1;
+    min-width: 2rem;
+  }
+
+  .outline-item .label {
+    font-family: var(--font-cn);
+    font-size: 1.05rem;
+    color: var(--charcoal);
+    line-height: 1.5;
+  }
+
+  /* Math (simple inline) */
+  .math {
+    font-family: 'Times New Roman', 'Noto Serif', serif;
+    font-style: italic;
+    font-size: 1.05em;
+  }
+
+  /* Table styling */
+  table {
+    border-collapse: collapse;
+    font-family: var(--font-cn);
+    font-size: clamp(0.82rem, 1.1vw, 0.95rem);
+    margin: 0.6em 0;
+    width: 100%;
+  }
+
+  th {
+    font-family: var(--font-en);
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-blue);
+    text-align: left;
+    padding: 0.6em 0.8em;
+    border-bottom: 2px solid var(--ink-blue);
+  }
+
+  td {
+    padding: 0.55em 0.8em;
+    border-bottom: 1px solid var(--rule-color);
+    color: var(--charcoal);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--ink-blue);
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  /* Navigation hint */
+  .nav-hint {
+    position: fixed;
+    bottom: 2vh;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-en);
+    font-size: 0.7rem;
+    color: var(--warm-gray-light);
+    letter-spacing: 0.08em;
+    opacity: 0.5;
+    z-index: 99;
+  }
+
+  /* Compact list for reference slide */
+  .ref-list {
+    font-family: var(--font-en);
+    font-size: 0.78rem;
+    color: var(--warm-gray);
+    line-height: 1.9;
+  }
+
+  .ref-list li::before {
+    width: 4px; height: 4px;
+    top: 0.55em;
+    background: var(--warm-gray-light);
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="nav-hint" id="navHint">← →  or  space</div>
+
+<div class="deck" id="deck">
+
+<!-- ============================================================ -->
+<!-- SLIDE 1: TITLE -->
+<!-- ============================================================ -->
+<section class="slide slide-title active" data-num="1 / 37">
+  <h1>后训练范式<br>SFT, RL &amp; On-Policy Distillation</h1>
+  <div class="subtitle">A Distributional &amp; Geometric Perspective</div>
+  <hr class="rule" style="background: var(--warm-gray-light); margin: 0.8em 0;">
+  <div class="meta">Roundtable Discussion &middot; 2026.05</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 2: SOURCES -->
+<!-- ============================================================ -->
+<section class="slide" data-num="2 / 37">
+  <h2>主要参考</h2>
+  <hr class="rule">
+  <div class="two-col" style="gap: 3vw; align-items: flex-start; margin-top: 0.5em;">
+    <div class="col" style="align-items: center; text-align: center;">
+      <img src="asset/willccbb.png" class="fig" alt="Will Brown tweet" style="border-radius: 10px; margin-bottom: 0.8em;">
+      <h3 style="font-size: 1rem; margin-bottom: 0.2em;">Will Brown &amp; Claude Opus 4.7</h3>
+      <p class="en" style="font-size: 0.88rem;"><a href="https://x.com/willccbb/status/2050038277454143918" target="_blank" style="color: var(--ink-blue); text-decoration: underline; text-underline-offset: 3px;">On SFT, RL, and on-policy distillation</a></p>
+      <p class="muted" style="font-size: 0.78rem;">2026.04.30 &middot; 梯度几何 &middot; Meta-Algorithm &middot; Pareto 最优教师</p>
+    </div>
+    <div class="col" style="align-items: center; text-align: center;">
+      <img src="asset/nrehiew_.png" class="fig" alt="nrehiew tweet" style="border-radius: 10px; margin-bottom: 0.8em;">
+      <h3 style="font-size: 1rem; margin-bottom: 0.2em;">nrehiew (William Hiew)</h3>
+      <p class="en" style="font-size: 0.88rem;"><a href="https://x.com/nrehiew_/status/2053482349300797526" target="_blank" style="color: var(--ink-blue); text-decoration: underline; text-underline-offset: 3px;">SFT, RL, and OPD Through a Distributional Lens</a></p>
+      <p class="muted" style="font-size: 0.78rem;">2026.05.10 &middot; 分布视角 &middot; 实验验证 &middot; 产业实践</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3: OUTLINE -->
+<!-- ============================================================ -->
+<section class="slide" data-num="3 / 37">
+  <h2>Roadmap</h2>
+  <hr class="rule">
+  <div class="outline-grid">
+    <div class="outline-item"><span class="num" style="color: var(--warm-gray-light);">00</span><span class="label" style="color: var(--warm-gray);">预备知识：<span class="term">Forward KL</span> &amp; <span class="term">Reverse KL</span></span></div>
+    <div class="outline-item"><span class="num">01</span><span class="label">分布视角：后训练在做什么？</span></div>
+    <div class="outline-item"><span class="num">02</span><span class="label"><span class="term">SFT</span> &mdash; 固定的外部目标</span></div>
+    <div class="outline-item"><span class="num">03</span><span class="label"><span class="term">RL</span> &mdash; 期望奖励方向</span></div>
+    <div class="outline-item"><span class="num">04</span><span class="label">为什么 RL 遗忘更少？</span></div>
+    <div class="outline-item"><span class="num">05</span><span class="label"><span class="term">OPD</span> &mdash; 两个世界之间</span></div>
+    <div class="outline-item"><span class="num">06</span><span class="label">自蒸馏 <span class="term">OPSD</span> 与梯度集中</span></div>
+    <div class="outline-item"><span class="num">07</span><span class="label">统一框架 <span class="term">Meta-Algorithm</span></span></div>
+    <div class="outline-item"><span class="num">08</span><span class="label">产业实践与未来方向</span></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE: SECTION — KL PRIMER -->
+<!-- ============================================================ -->
+<section class="slide slide-section" data-num="4 / 37">
+  <div class="section-num">00</div>
+  <h2>预备知识：KL 散度</h2>
+  <p>KL 散度的非对称性是理解 SFT 与 RL 行为差异的基础。用简单分布 Q 拟合复杂分布 P 时，优化方向不同会导致截然不同的结果。</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE: FORWARD KL -->
+<!-- ============================================================ -->
+<section class="slide" data-num="5 / 37">
+  <span class="section-label">KL Primer</span>
+  <h2>Forward KL：Mean-Seeking / Mode-Covering</h2>
+  <div class="two-col" style="gap: 3.5vw; align-items: start;">
+    <div class="col">
+      <h3>定义</h3>
+      <p style="font-family: var(--font-en); font-size: 1.05rem; margin: 0.4em 0 0.8em; color: var(--ink-blue);">
+        min<sub>Q</sub> D<sub>KL</sub>(P || Q) = min<sub>Q</sub> &sum; P(x) log P(x)/Q(x)
+      </p>
+      <p>期望在<span class="highlight">真实分布 P</span> 上计算。</p>
+      <hr class="rule">
+      <h3>关键行为</h3>
+      <ul>
+        <li><strong>P(x) &gt; 0 时</strong>：Q(x) 必须也 &gt; 0，否则 log Q(x) → &minus;&infin;，KL 爆炸</li>
+        <li><strong>P(x) &asymp; 0 时</strong>：该项对总和贡献极小 &mdash; Q 在 P 不存在的地方<em>可以随意分配概率</em></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>行为特性</h3>
+      <div class="callout" style="border-left-color: var(--ink-blue);">
+        <p><strong style="color: var(--ink-blue);">Mean-Seeking / Zero-Avoiding</strong></p>
+        <p>为了不遗漏 P 的任何峰值，Q 倾向于变得<span class="highlight">宽而平坦</span>，覆盖 P 所有非零区域。</p>
+      </div>
+      <p style="margin: 0.6em 0;">若 P 是多峰分布，Q 会用一个<em>大方差的单峰</em>罩住所有峰 &mdash; 宁可错杀一千，不可放过一个。</p>
+      <hr class="rule">
+      <h3>在后训练中</h3>
+      <p><span class="term">SFT</span> = 最小化 Forward KL &mdash; 模型必须对训练数据中所有出现的 token 分配概率，即使这意味着牺牲原有分布的模式。</p>
+    </div>
+  </div>
+  <p class="muted" style="position: absolute; bottom: 3vh; left: 8vw; font-size: 0.72rem;">
+    Ref: <a href="https://zhuanlan.zhihu.com/p/1979720260128118305" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">KL进阶: Forward KL、Reverse KL、KL估计与应用</a>
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE: REVERSE KL -->
+<!-- ============================================================ -->
+<section class="slide" data-num="6 / 37">
+  <span class="section-label">KL Primer</span>
+  <h2>Reverse KL：Mode-Seeking / Zero-Forcing</h2>
+  <div class="two-col" style="gap: 3.5vw; align-items: start;">
+    <div class="col">
+      <h3>定义</h3>
+      <p style="font-family: var(--font-en); font-size: 1.05rem; margin: 0.4em 0 0.8em; color: var(--ink-blue);">
+        min<sub>Q</sub> D<sub>KL</sub>(Q || P) = min<sub>Q</sub> &sum; Q(x) log Q(x)/P(x)
+      </p>
+      <p>期望在<span class="highlight">模型分布 Q</span> 上计算。</p>
+      <hr class="rule">
+      <h3>关键行为</h3>
+      <ul>
+        <li><strong>P(x) &asymp; 0 时</strong>：若 Q(x) &gt; 0，log P(x) → &minus;&infin;，KL 爆炸 &mdash; Q <span class="highlight">绝不能在 P 不存在的地方分配概率</span></li>
+        <li><strong>P(x) &gt; 0 但 Q(x) &asymp; 0 时</strong>：该项贡献极小 &mdash; Q 可以<em>选择性忽略 P 的某些模式</em></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>行为特性</h3>
+      <div class="callout" style="border-left-color: var(--accent-red);">
+        <p><strong style="color: var(--accent-red);">Mode-Seeking / Zero-Forcing</strong></p>
+        <p>Q 倾向于找到 P 的<span class="highlight">单一最高峰</span>并精确拟合，完全忽略其他峰。</p>
+      </div>
+      <p style="margin: 0.6em 0;">宁缺毋滥 &mdash; 生成质量高但多样性低，可能引发 <span class="term">mode collapse</span>。</p>
+      <hr class="rule">
+      <h3>在后训练中</h3>
+      <p><span class="term">RL</span> &asymp; 最小化 Reverse KL &mdash; 模型只在自己有把握的区域分配概率，不会被迫覆盖远离当前策略的分布区域。<span class="term">OPD</span> 同样使用 Reverse KL。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE: KL COMPARISON SUMMARY -->
+<!-- ============================================================ -->
+<section class="slide" data-num="7 / 37">
+  <span class="section-label">KL Primer</span>
+  <h2>对比总结：覆盖 vs. 聚焦</h2>
+  <table style="margin-top: 0.6em; font-size: 0.88rem;">
+    <tr>
+      <th style="width: 18%;"></th>
+      <th style="width: 41%;">Forward KL &nbsp; D<sub style="font-size:0.7em">KL</sub>(P || Q)</th>
+      <th style="width: 41%;">Reverse KL &nbsp; D<sub style="font-size:0.7em">KL</sub>(Q || P)</th>
+    </tr>
+    <tr><td style="font-weight: 600;">期望基于</td><td>真实分布 P（面向数据）</td><td>模型分布 Q（面向模型）</td></tr>
+    <tr><td style="font-weight: 600;">拟合策略</td><td>覆盖 &mdash; 宽而平坦（Mean-Seeking）</td><td>聚焦 &mdash; 窄而精确（Mode-Seeking）</td></tr>
+    <tr><td style="font-weight: 600;">典型方法</td><td>SFT（最大似然估计）</td><td>RL / OPD / OPSD</td></tr>
+    <tr><td style="font-weight: 600;">风险</td><td>过于平滑，牺牲旧模式</td><td>Mode collapse，多样性不足</td></tr>
+  </table>
+  <hr class="rule">
+  <div class="two-col" style="gap: 3.5vw; align-items: start;">
+    <div class="col">
+      <h3>选择的本质</h3>
+      <p>Forward KL 要求模型对所有观察到的数据都要有良好的解释（<span class="highlight">面向数据</span>）；Reverse KL 要求模型生成的任何样本都是逼真的（<span class="highlight">面向模型</span>）。</p>
+      <p style="margin-top: 0.5em;">这种根本差异使得两者在后训练中扮演截然不同的角色 &mdash; 后面我们会看到，SFT 的灾难性遗忘和 RL 的抗遗忘性都可以从这个视角得到解释。</p>
+    </div>
+    <div class="col">
+      <div class="callout" style="border-left-color: var(--ink-blue);">
+        <p><strong>在后训练语境下</strong></p>
+        <p style="margin-top: 0.3em;"><span class="term">SFT</span> = Forward KL &mdash; 模型必须覆盖训练数据的所有 token，可能以牺牲原有能力为代价</p>
+        <p style="margin-top: 0.3em;"><span class="term">RL</span> &asymp; Reverse KL &mdash; 模型只在自己的高概率区域更新，隐式保护已有分布</p>
+        <p style="margin-top: 0.3em;"><span class="term">OPD / OPSD</span> = Reverse KL &mdash; 但教师信号的质量决定了"聚焦"的方向是否正确</p>
+      </div>
+    </div>
+  </div>
+  <p class="muted" style="position: absolute; bottom: 3vh; left: 8vw; font-size: 0.72rem;">
+    Ref: <a href="https://zhuanlan.zhihu.com/p/1979720260128118305" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">KL进阶: Forward KL、Reverse KL、KL估计与应用</a>
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE: CORE QUESTIONS -->
+<!-- ============================================================ -->
+<section class="slide" data-num="8 / 37">
+  <h2>我们要回答的核心问题</h2>
+  <hr class="rule">
+  <div style="max-width: 80%;">
+    <ul>
+      <li style="margin-bottom: 0.9em; font-size: clamp(1rem, 1.4vw, 1.2rem);">为什么 <span class="term">SFT</span> 便宜高效，但存在不可逾越的天花板？</li>
+      <li style="margin-bottom: 0.9em; font-size: clamp(1rem, 1.4vw, 1.2rem);">为什么 <span class="term">RL</span> 昂贵缓慢，却更抗遗忘、泛化更好？</li>
+      <li style="margin-bottom: 0.9em; font-size: clamp(1rem, 1.4vw, 1.2rem);">为什么 <span class="term">OPD</span> 看起来像蒸馏，却继承了 RL 的许多好处？</li>
+      <li style="margin-bottom: 0.9em; font-size: clamp(1rem, 1.4vw, 1.2rem);">为什么 <span class="term">OPSD</span> 同样是 on-policy，却容易在 100 步内崩溃？</li>
+    </ul>
+    <div class="callout" style="margin-top: 1em;">
+      <p>这些问题的答案，都可以从 <span class="highlight">KL 散度的方向</span>、<span class="highlight">数据的 on/off-policy 属性</span>、以及<span class="highlight">梯度的几何特性</span> 三个视角得到统一的解释。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE: SECTION — DISTRIBUTIONAL VIEW & PIPELINE -->
+<!-- ============================================================ -->
+<section class="slide slide-section" data-num="9 / 37">
+  <div class="section-num">01</div>
+  <h2>分布视角与标准 Pipeline</h2>
+  <p>语言模型是序列上的分布，后训练就是重塑这个分布。标准 pipeline 的 SFT → RL 排序不是惯例，而是有数学原因的。</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE: PIPELINE PHASE CHANGE -->
+<!-- ============================================================ -->
+<section class="slide" data-num="10 / 37">
+  <span class="section-label">Pipeline</span>
+  <h2>SFT → RL 的 Tipping Point</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <h3>为什么先 SFT，后 RL？</h3>
+      <ul>
+        <li>当前性能<span class="highlight">远低于教师</span>时：SFT bits 极其便宜 &mdash; 从有能力的来源学习你没有的能力</li>
+        <li>当前性能<span class="highlight">接近教师</span>时：边际 SFT 样本不再 informative &mdash; 学生自己的 rollout 开始产生教师没见过的新策略</li>
+        <li>越过 tipping point 后，rollout compute 花在 RL 上比花在更多 SFT 上更值</li>
+      </ul>
+      <hr class="rule">
+      <h3>关键区别</h3>
+      <ul>
+        <li><span class="term">SFT</span> 的采样分布在数据集构建时就已固定 &mdash; 改进不会回馈到数据</li>
+        <li><span class="term">RL</span> 的采样分布是当前策略 &mdash; 改进<span class="highlight">复合累积</span>，天花板由 verifier 而非教师决定</li>
+      </ul>
+    </div>
+    <div class="col">
+      <img src="asset/perf-vs-compute.png" class="fig" alt="Performance vs compute">
+      <figcaption>Performance vs. Compute：SFT 先快后平，RL 慢启动但无教师天花板 [Brown]</figcaption>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ============================================================ -->
+<!-- SLIDE: SECTION — SFT -->
+<!-- ============================================================ -->
+<section class="slide slide-section" data-num="11 / 37">
+  <div class="section-num">02</div>
+  <h2>Supervised Fine-Tuning</h2>
+  <p>用外部数据集做 cross-entropy 训练。目标分布在训练前就已固定，天花板由教师/数据决定。</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4: SFT — CONCEPT -->
+<!-- ============================================================ -->
+<section class="slide" data-num="12 / 37">
+  <span class="section-label">SFT</span>
+  <h2>SFT：拉向一个固定的外部分布</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <ul>
+        <li>数据集在训练前就已存在（人写 / 强模型生成）</li>
+        <li>Cross-entropy 训练 = 最小化 <span class="term">forward KL</span></li>
+        <li>模型被拉向数据分布，<span class="highlight">与起始分布无关</span></li>
+        <li>天花板由教师/数据决定 &mdash; 学生最多达到教师水平</li>
+      </ul>
+      <div class="callout">
+        <p>SFT 的本质：对每个 token 施加均匀的、密集的监督信号，不区分任务关键 token 与风格 token。</p>
+      </div>
+    </div>
+    <div class="col">
+      <img src="asset/sft-distribution-pull.png" class="fig" alt="SFT distribution">
+      <figcaption>SFT 将模型分布拉向外部数据分布 [nrehiew]</figcaption>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5: SFT — GRADIENT -->
+<!-- ============================================================ -->
+<section class="slide" data-num="13 / 37">
+  <span class="section-label">SFT</span>
+  <h2>SFT 的梯度特性：稠密、有偏、但分散</h2>
+  <div class="two-col-img-text">
+    <div class="col">
+      <img src="asset/sft-gradient-constructive-interference.png" class="fig" alt="SFT gradient geometry">
+      <figcaption>SFT 梯度：所有方向都偏向数据流形 [Brown]</figcaption>
+    </div>
+    <div class="col">
+      <ul>
+        <li>每个 token 都有 one-hot label，梯度密度极高</li>
+        <li>梯度均值 <span class="highlight">非零</span> &mdash; 指向数据分布的方向，构成 <span class="term">constructive interference</span></li>
+        <li>但数据本身多样，偏置分散在许多方向 &mdash; 模型温和地漂向数据流形</li>
+      </ul>
+      <hr class="rule">
+      <h3>为什么 SFT 不会"爆炸"？</h3>
+      <p>因为大多数 SFT 更新只是在强化模型<em>已经大致知道</em>的东西，很少有 token 要求模型把接近零的概率拉到很高。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6: SFT — CEILING & FORGETTING -->
+<!-- ============================================================ -->
+<section class="slide" data-num="14 / 37">
+  <span class="section-label">SFT</span>
+  <h2>SFT 的天花板与灾难性遗忘</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <h3>天花板问题</h3>
+      <ul>
+        <li>采样分布在数据集构建时就已固定</li>
+        <li>模型变强后，数据不会跟着变 &mdash; 边际收益递减</li>
+        <li><span class="term">Rejection-sampled SFT</span> 把曲线上移，但不改变形状</li>
+      </ul>
+      <hr class="rule">
+      <h3>灾难性遗忘</h3>
+      <ul>
+        <li><span class="term">Forward KL</span> 的 mode-covering 行为：为覆盖新模式，可能牺牲旧模式</li>
+        <li>Diao et al.：SFT 数据含大量低概率 + 低熵 token &mdash; 模型高度自信但被迫拟合冲突标签</li>
+      </ul>
+    </div>
+    <div class="col">
+      <img src="asset/perf-vs-compute.png" class="fig" alt="Performance vs compute">
+      <figcaption>Performance vs. Compute：Off-policy 方法天花板低于教师 [Brown]</figcaption>
+    </div>
+  </div>
+  <p class="muted" style="position: absolute; bottom: 3vh; left: 8vw; font-size: 0.72rem;">
+    Ref: <a href="https://arxiv.org/abs/2601.02151" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">Diao et al., Understanding the Dark Side of LLMs' Fine-Tuning Data (2026)</a>
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7: SFT — TEACHER CHOICE -->
+<!-- ============================================================ -->
+<section class="slide" data-num="15 / 37">
+  <span class="section-label">SFT</span>
+  <h2>教师的选择：Same-family vs. Cross-family</h2>
+  <p style="margin: -0.3em 0 0.4em; font-size: clamp(0.88rem, 1.2vw, 1rem); color: var(--warm-gray);">
+    此处"教师"泛指 <span class="term">SFT 训练数据的来源</span> &mdash; 可以是更强的模型生成的 completions，也可以是人类标注。Brown 在原文中将其统一称为 <span class="term">teacher SFT</span>，以便与 OPD / OPSD 的教师概念拉齐到同一框架下。
+  </p>
+  <hr class="rule">
+  <div class="two-col">
+    <div class="col">
+      <h3 style="color: var(--ink-blue);">Same-family Teacher</h3>
+      <ul>
+        <li>Tokenizer 一致、训练 recipe 一致</li>
+        <li>教师输出的分布结构接近学生自然产出</li>
+        <li>SFT 信号主要关于<em>能力差距</em>，而非风格差异</li>
+        <li>Per-token logprobs 直接可比</li>
+      </ul>
+      <p class="muted" style="margin-top: 0.5em;">e.g. Qwen3-32B → Qwen3-8B</p>
+    </div>
+    <div class="col">
+      <h3 style="color: var(--accent-red);">Cross-family Teacher</h3>
+      <ul>
+        <li>Tokenizer 不匹配 &mdash; 重新分词时信息丢失</li>
+        <li>Recipe 不匹配 &mdash; 学生被迫学习教师的<em>风格瑕疵</em></li>
+        <li>大量 SFT bits 消耗在学表面形式，而非推理能力</li>
+        <li>Soft-target distillation 几乎不可行</li>
+      </ul>
+      <p class="muted" style="margin-top: 0.5em;">e.g. GPT-4o → Llama-3</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 1.2em;">
+    <p>这个区分至关重要：<span class="term">On-policy distillation</span> 基本只在 same-family 设定下可用。</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8: SECTION — RL -->
+<!-- ============================================================ -->
+<section class="slide slide-section" data-num="16 / 37">
+  <div class="section-num">03</div>
+  <h2>Reinforcement Learning</h2>
+  <p>模型从自身采样，由 reward 指引方向。没有固定的目标分布，天花板由验证器决定。</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9: RL — CONCEPT -->
+<!-- ============================================================ -->
+<section class="slide" data-num="17 / 37">
+  <span class="section-label">RL</span>
+  <h2>RL：沿期望奖励最大方向移动</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <ul>
+        <li>模型从自身 <span class="term">on-policy</span> 采样 &mdash; 改进会回馈到下一轮采样分布</li>
+        <li>Reward function 评分，<span class="term">policy gradient</span> 更新</li>
+        <li>没有一个任意的外部分布拉扯模型</li>
+        <li><span class="highlight">复合效应</span>：改进累积，天花板由 verifier 而非教师决定</li>
+      </ul>
+      <hr class="rule">
+      <h3>RLVR vs. RLHF</h3>
+      <ul>
+        <li><span class="term">RLVR</span>：可验证奖励，低偏差 &mdash; 可以大胆放松 KL 约束</li>
+        <li><span class="term">RLHF</span>：reward model 不完美，高偏差 &mdash; 需要 trust-region 约束</li>
+      </ul>
+    </div>
+    <div class="col">
+      <img src="asset/rl-distribution-reward-direction.png" class="fig" alt="RL distribution">
+      <figcaption>RL 在当前策略附近沿 reward 方向移动 [nrehiew]</figcaption>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 10: RL — GRADIENT -->
+<!-- ============================================================ -->
+<section class="slide" data-num="18 / 37">
+  <span class="section-label">RL</span>
+  <h2>RL 的梯度特性：稀疏、无偏、破坏性干涉</h2>
+  <div class="two-col-img-text">
+    <div class="col">
+      <img src="asset/rl-gradient-destructive-interference.png" class="fig" alt="RL gradient geometry">
+      <figcaption>RL 梯度的破坏性干涉：噪声抵消，只留下与 reward 相关的信号 [Brown]</figcaption>
+    </div>
+    <div class="col">
+      <ul>
+        <li>Outcome reward 是 <span class="highlight">O(1) bits per episode</span> &mdash; 表面看信息极度稀疏</li>
+        <li>每个 token 的 advantage 大多是噪声 &mdash; 它们恰好在同一条轨迹上，不是因果负责</li>
+        <li>大 batch 平均后，噪声方向<span class="term">相互抵消</span></li>
+        <li>存活下来的是<span class="highlight">与 reward 真正相关</span>的微小一致性成分</li>
+      </ul>
+      <div class="callout">
+        <p>RL 的稀疏性不是纯粹的缺陷 &mdash; 它是无偏估计器的代价。每步移动很小，但方向可信。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE: SECTION — WHY RL FORGETS LESS -->
+<!-- ============================================================ -->
+<section class="slide slide-section" data-num="19 / 37">
+  <div class="section-num">04</div>
+  <h2>为什么 RL 遗忘更少？</h2>
+  <p>KL 方向、数据依赖正则化、稀疏参数更新 &mdash; 多种解释各有道理，但 on-policy 数据才是核心承重件。</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 11: WHY RL FORGETS LESS -->
+<!-- ============================================================ -->
+<section class="slide" data-num="20 / 37">
+  <span class="section-label">RL vs. SFT</span>
+  <h2>为什么 RL 遗忘更少？</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <h3>解释一：KL 方向不同</h3>
+      <ul>
+        <li>SFT = <span class="term">forward KL</span> &mdash; mode-covering，可能牺牲旧模式学新任务</li>
+        <li>RL ≈ <span class="term">reverse KL</span> &mdash; mode-seeking，保守地在已有模式上改进</li>
+      </ul>
+      <p class="muted">问题：即使去掉显式 KL 惩罚，RL 仍然不怎么遗忘</p>
+      <hr class="rule">
+      <h3>解释二：数据依赖正则化</h3>
+      <ul>
+        <li>RL 中 reward variance 高的组获得更小的更新</li>
+        <li>SFT 对每个 token 均匀施压，不管是否任务关键</li>
+        <li>RL 更新只修改<span class="highlight">小子网络</span>（稀疏但满秩），SFT 更新更冗余</li>
+      </ul>
+    </div>
+    <div class="col">
+      <img src="asset/forward-vs-reverse-kl.png" class="fig" alt="Forward KL vs Reverse KL">
+      <figcaption>Reverse KL (RL) 的 multi-modal 策略遗忘更少 [Chen et al.]</figcaption>
+    </div>
+  </div>
+  <p class="muted" style="position: absolute; bottom: 3vh; left: 8vw; font-size: 0.72rem;">
+    Ref: <a href="https://arxiv.org/abs/2510.18874" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">Chen et al., Reinforcement Learning as Reverse KL Minimization (2025)</a>
+    &middot; <a href="https://arxiv.org/abs/2505.11711" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">Mukherjee et al., RL Finetunes Small Subnetworks (2025)</a>
+    &middot; <a href="https://arxiv.org/abs/2507.05386" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">Lai et al., Data-Dependent Regularization in RL (2025)</a>
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 12: THE ON-POLICY EXPLANATION -->
+<!-- ============================================================ -->
+<section class="slide" data-num="21 / 37">
+  <span class="section-label">RL vs. SFT</span>
+  <h2>核心解释：On-Policy 数据是承重件</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <div class="callout" style="margin-bottom: 1em;">
+        <p>不是 RL 算法本身特殊，也不是显式 KL 惩罚在做主要工作。<br><span class="highlight">On-policy 采样</span>才是真正让你在提升能力的同时不炸掉 KL 预算的东西。</p>
+      </div>
+      <h3>Shenfeld et al. 的直觉</h3>
+      <ul>
+        <li>REINFORCE + binary reward ≈ <span class="term">rejection sampling</span></li>
+        <li>最优策略 = 所有 completion reward = 1 的策略</li>
+        <li>因为在<em>当前策略</em>上采样，目标自动是距当前策略<span class="highlight">最近的最优策略</span></li>
+        <li>每个 timestep 的更新方向都隐式约束了 KL 预算</li>
+      </ul>
+      <p style="margin-top: 0.8em;">SFT 的目标分布可以离起始分布任意远；RL 的目标在每一步都紧贴当前策略。</p>
+    </div>
+    <div class="col">
+      <img src="asset/nearest-optimal-policy.png" class="fig" alt="Nearest optimal policy">
+      <figcaption>On-policy 训练使目标分布始终接近当前策略 [nrehiew]</figcaption>
+    </div>
+  </div>
+  <p class="muted" style="position: absolute; bottom: 3vh; left: 8vw; font-size: 0.72rem;">
+    Ref: <a href="https://arxiv.org/abs/2509.04259" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">Shenfeld et al., On-Policy Learning Implicitly Regularizes Against Forgetting (2025)</a>
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 13: SECTION — OPD -->
+<!-- ============================================================ -->
+<section class="slide slide-section" data-num="22 / 37">
+  <div class="section-num">05</div>
+  <h2>On-Policy Distillation</h2>
+  <p>学生自己采样，教师逐 token 打分。兼具 RL 的复合效应和蒸馏的信号密度。</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 14: OPD — CONCEPT -->
+<!-- ============================================================ -->
+<section class="slide" data-num="23 / 37">
+  <span class="section-label">OPD</span>
+  <h2>OPD：两个世界之间的甜蜜点</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <ul>
+        <li>学生 <span class="term">on-policy</span> 采样 &mdash; 继承 RL 的复合效应</li>
+        <li>教师 per-token <span class="term">reverse KL</span> 评分 &mdash; 信号密度远高于 RL</li>
+        <li>教师只需对学生的 tokens 做 <span class="term">prefill</span> &mdash; 比生成便宜得多</li>
+        <li>计算效率：在 AIME 级 benchmark 上比 RL 快 <span class="highlight">9-30x</span></li>
+      </ul>
+      <hr class="rule">
+      <h3>为什么实际上限高于 SFT-RS？</h3>
+      <ul>
+        <li>SFT/SFT-RS 在教师的 state 分布上训练，但在学生的 state 分布上评估</li>
+        <li>长 rollout 上的 <span class="term">exposure bias</span> 逐步积累</li>
+        <li>OPD 在学生自己的 rollout 上训练，<span class="highlight">gap 不会打开</span></li>
+      </ul>
+    </div>
+    <div class="col">
+      <img src="asset/perf-vs-compute.png" class="fig" alt="Performance vs compute all methods">
+      <figcaption>OPD 收敛速度接近 SFT，实际上限接近教师 [Brown]</figcaption>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 0.6em; border-left-color: var(--accent-gold);">
+    <p><strong>Framing 注意</strong>：OPD 不等于"全面优于 RL"。更准确的说法是 &mdash; OPD 是 <span class="term">moderate compute + same-family teacher</span> 下的 compute-optimal shortcut，能更快到达教师水平；但 RL 的天花板由 verifier 决定，在极限 compute 下可能更高。</p>
+  </div>
+</section>
+<!-- ============================================================ -->
+<section class="slide" data-num="24 / 37">
+  <span class="section-label">OPD</span>
+  <h2>实验：不同教师的 OPD &mdash; 惊人发现</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <h3>实验设计</h3>
+      <p><span class="term">Minimal Code Editing</span> 任务：给模型一个有 bug 的函数，要求修复 bug 且不改动其他部分。分别用 SFT 和 RL 训教师，再用两个教师做 OPD 蒸馏。</p>
+      <p class="muted" style="margin-top: 0.3em;">这个任务能同时测两件事：<strong>泛化</strong>（在不同 corruption 类型上评估）和<strong>遗忘</strong>（在 LiveCodeBench 上检测通用代码能力退化）。</p>
+      <hr class="rule">
+      <h3>三个意外</h3>
+      <ul>
+        <li><span class="highlight">SFT 教师和 RL 教师的 OPD 学生几乎一样好</span></li>
+        <li>两个 OPD 学生都略微超越了 RL 教师</li>
+        <li>即使 SFT 教师有严重遗忘，其 OPD 学生的遗忘<span class="highlight">远小于教师本身</span></li>
+      </ul>
+      <div class="callout" style="margin-top: 0.8em;">
+        <p>数据来源（on-policy 采样）比教师质量更重要。这意味着我们可以用 SFT "过拟合"一个专家模型，再用 OPD 把能力转移出来。</p>
+      </div>
+    </div>
+    <div class="col">
+      <img src="asset/opd-teacher-comparison-results.png" class="fig" alt="OPD experiment results">
+      <figcaption>OPD 学生超越两个教师，且遗忘远少于 SFT 教师 [nrehiew]</figcaption>
+    </div>
+  </div>
+  <p class="muted" style="position: absolute; bottom: 3vh; left: 8vw; font-size: 0.72rem;">
+    Ref: <a href="https://arxiv.org/abs/2306.13649" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">Agarwal et al., On-Policy Distillation of Language Models (2023)</a>
+    &middot; <a href="https://arxiv.org/abs/1011.0686" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">Ross et al., DAgger: A Reduction of Imitation Learning (2010)</a>
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 16: STUDENT > TEACHER -->
+<!-- ============================================================ -->
+<section class="slide" data-num="25 / 37">
+  <span class="section-label">OPD</span>
+  <h2>学生为何能超越教师？</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <h3>假说一：On-policy state coverage</h3>
+      <p>教师在学生的<em>错误前缀</em>上给建议，而非在教师自己的前缀上 &mdash; 监督更有针对性。</p>
+      <h3>假说二：分布塑形 ≠ 奖励最大化</h3>
+      <p>KL matching 传递了风格、不确定性、推理结构等信息，可能在不复制教师 greedy 行为的情况下改善采样分布。</p>
+      <h3>假说三：Entropy collapse</h3>
+      <p>OPD 的 entropy 下降远比 RL 剧烈 &mdash; reverse KL 的 mode-seeking 导致模型在新能力上高度集中。</p>
+    </div>
+    <div class="col">
+      <img src="asset/opd-reward-entropy-curves.png" class="fig" alt="Reward and entropy curves">
+      <figcaption>OPD vs RL：OPD 的 reward 提升更突然，伴随剧烈的 entropy collapse [nrehiew]</figcaption>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 17: SECTION — SELF-DISTILLATION -->
+<!-- ============================================================ -->
+<section class="slide slide-section" data-num="26 / 37">
+  <div class="section-num">06</div>
+  <h2>自蒸馏：SDFT &amp; OPSD</h2>
+  <p>没有 same-family 教师时，用自己当教师 + privileged information。两种实例化：<br>
+  <strong style="color: var(--parchment);">SDFT</strong> &mdash; 教师看到 expert demonstration（分布偏移较温和）<br>
+  <strong style="color: var(--parchment);">OPSD</strong> &mdash; 教师看到 ground-truth answer（分布偏移更剧烈，梯度集中是致命风险）</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 18: OPSD — PIVOT TOKEN -->
+<!-- ============================================================ -->
+<section class="slide" data-num="27 / 37">
+  <span class="section-label">OPSD</span>
+  <h2>OPSD：Pivot Token 主导梯度</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <h3>问题机制</h3>
+      <ul>
+        <li>学生和教师是<em>同一模型</em>，教师多了 ground-truth answer 做前缀</li>
+        <li>大多数 token 两者概率接近 &mdash; KL ≈ 0</li>
+        <li>关键 <span class="term">pivot token</span>：学生 p=0.01，教师 p=0.6</li>
+        <li>Per-token KL ≈ <span class="highlight">log(0.6/0.01) ≈ 4.1</span> &mdash; 比普通 token 大 ~100 倍</li>
+      </ul>
+      <hr class="rule">
+      <h3>后果</h3>
+      <ul>
+        <li>RL 的噪声可以抵消，SFT 的偏置分散在许多 token 上</li>
+        <li>OPSD <span class="highlight">两者都没有</span> &mdash; 一个集中的拉力，不被平均</li>
+        <li>不加 per-token KL clipping → ~100 步内崩溃</li>
+      </ul>
+    </div>
+    <div class="col">
+      <img src="asset/opsd-pivot-token-loss.png" class="fig" alt="OPSD pivot token">
+      <figcaption>一个 pivot token 贡献的 loss 是普通 token 的百倍量级 [Brown]</figcaption>
+    </div>
+  </div>
+  <p class="muted" style="position: absolute; bottom: 3vh; left: 8vw; font-size: 0.72rem;">
+    Ref: <a href="https://arxiv.org/abs/2601.18734" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">Zhao et al., OPSD: On-Policy Self-Distillation for LLMs (2026)</a>
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 19: OPSD — PER-TOKEN KL TABLE -->
+<!-- ============================================================ -->
+<section class="slide" data-num="28 / 37">
+  <span class="section-label">OPSD</span>
+  <h2>Per-token KL 分析：Style Token 的陷阱</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <ul>
+        <li>Zhao et al. 对 OPSD 做了 per-token KL 分解</li>
+        <li>发现 <span class="highlight">style/pivot token</span>（如 "wait""alright"）的 KL 显著高于 math token（"exponent""logarithm"）</li>
+        <li>如果对这些不重要的 token 更新过于激进 → 模型坍塌</li>
+        <li>解决方案：<span class="term">per-token pointwise KL clipping</span></li>
+      </ul>
+      <div class="callout" style="margin-top: 0.8em;">
+        <p>OPSD 的处境类似 RLHF 而非 RLVR：教师信号的偏差更高，必须用 clipping / trust-region 防止过度优化错误方向。</p>
+      </div>
+    </div>
+    <div class="col">
+      <img src="asset/opsd-per-token-kl-table.png" class="fig" alt="Per-token KL table">
+      <figcaption>Style token 的 per-token KL 显著高于 Math token [Zhao et al.]</figcaption>
+    </div>
+  </div>
+  <p class="muted" style="position: absolute; bottom: 3vh; left: 8vw; font-size: 0.72rem;">
+    Ref: <a href="https://arxiv.org/abs/2601.18734" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">Zhao et al., OPSD: On-Policy Self-Distillation for LLMs (2026)</a>
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE: SECTION — UNIFIED FRAMEWORK -->
+<!-- ============================================================ -->
+<section class="slide slide-section" data-num="29 / 37">
+  <div class="section-num">07</div>
+  <h2>统一框架</h2>
+  <p>梯度特性的三轴分类（sparse/dense, biased/unbiased, concentrated/diffuse），以及将所有方法纳入同一个 meta-algorithm。</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 20: UNIFIED TAXONOMY — AXES -->
+<!-- ============================================================ -->
+<section class="slide" data-num="30 / 37">
+  <span class="section-label">Unified View</span>
+  <h2>梯度特性统一分析：两个基本轴</h2>
+  <div class="two-col-text-img" style="align-items: start;">
+    <div class="col">
+      <h3>轴一：Sparse vs. Dense</h3>
+      <p>每个 token 是否都得到独立的学习信号？</p>
+      <ul>
+        <li><span class="term">RL</span>：稀疏 &mdash; 整条轨迹只有一个 outcome reward，广播到所有 token。大多数 token 的 advantage 只是噪声（恰好在同一条轨迹上，不是因果负责）</li>
+        <li><span class="term">SFT / OPD / OPSD</span>：稠密 &mdash; 每个 token 都有独立的监督信号（one-hot label 或 teacher logprob），无需广播</li>
+      </ul>
+      <hr class="rule">
+      <h3>轴二：Biased vs. Unbiased</h3>
+      <p>梯度的期望方向是否指向一个<em>固定</em>目标？</p>
+      <ul>
+        <li><span class="term">RL</span>：无偏 &mdash; 梯度期望只沿与 reward 相关的方向非零。noise 互相抵消（<span class="highlight">destructive interference</span>），存活下来的是微小但可信的信号</li>
+        <li><span class="term">SFT / OPD / OPSD</span>：有偏 &mdash; 梯度期望始终指向目标分布，noise 不会抵消而是叠加（<span class="highlight">constructive interference</span>）</li>
+      </ul>
+    </div>
+    <div class="col">
+      <img src="asset/taxonomy-sparse-dense-biased-unbiased.png" class="fig" alt="2x2 taxonomy">
+      <figcaption>Sparse/Dense x Biased/Unbiased 四象限 [Brown]</figcaption>
+      <div class="callout" style="margin-top: 1em;">
+        <p><strong>SFT、OPD、OPSD 都在右上角</strong>（dense + biased），但它们的行为差异巨大 &mdash; 仅靠这两个轴不足以区分。我们需要第三个轴。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 20b: UNIFIED TAXONOMY — CONCENTRATION -->
+<!-- ============================================================ -->
+<section class="slide" data-num="31 / 37">
+  <span class="section-label">Unified View</span>
+  <h2>第三轴：Concentration &mdash; 偏置集中在哪里？</h2>
+  <div class="two-col-text-img" style="align-items: start;">
+    <div class="col">
+      <h3>SFT：偏置分散（Diffuse）</h3>
+      <p>数据本身多样，偏置方向分散在许多 token 上。大多数更新只是在强化模型<em>已经大致知道</em>的东西，很少要求把接近零的概率拉到很高。所以 SFT 容错性好 &mdash; 数据有些脏、学习率有些偏都不会崩。</p>
+      <hr class="rule">
+      <h3>Same-family OPD：偏置同样分散</h3>
+      <p>教师与学生分布结构接近（同 tokenizer/recipe），per-token KL 普遍较小且均匀。继承了 SFT 的分散性。</p>
+      <hr class="rule">
+      <h3 style="color: var(--accent-red);">OPSD：偏置高度集中（Concentrated）</h3>
+      <p>教师看到了答案后，少数 pivot token 的 KL 爆炸式增长（~100x），梯度被这几个 token 主导。RL 的噪声可以抵消，SFT 的偏置足够分散 &mdash; <span class="highlight">OPSD 两者都没有</span>。这就是为什么不加 clipping 会在 ~100 步内崩溃。</p>
+    </div>
+    <div class="col">
+      <img src="asset/taxonomy-with-concentration.png" class="fig" alt="Full taxonomy with concentration">
+      <figcaption>加入 Concentration 维度后的完整分类 [Brown]</figcaption>
+      <div class="callout" style="margin-top: 1em; border-left-color: var(--accent-red);">
+        <p><strong>Punchline</strong>：OPSD 是唯一同时具备 <span class="highlight">dense + biased + concentrated</span> 的方法。这就是为什么它需要显式防御（per-token KL clipping、固定教师为初始策略）而其他方法不需要。下一步的方向是：寻找 KL <em>天然分散</em>的教师，而不是靠 clipping 来压制集中的教师。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 21: META-ALGORITHM — KNOBS -->
+<!-- ============================================================ -->
+<section class="slide" data-num="32 / 37">
+  <span class="section-label">Meta-Algorithm</span>
+  <h2>统一框架：三个旋钮，所有方法都是特例</h2>
+  <div class="two-col-text-img" style="align-items: start;">
+    <div class="col">
+      <p>Brown 将所有后训练方法统一为一个 token-level policy gradient，由三个旋钮控制：</p>
+      <ul>
+        <li>$\alpha \in [0,1]$ &mdash; 采样分布的 on-policy 程度<br><span class="muted">0 = 纯 off-policy（固定数据集），1 = 纯 on-policy（当前策略采样）</span></li>
+        <li>$\lambda \in [0,1]$ &mdash; per-token advantage 的来源混合<br><span class="muted">1 = 纯教师 KL 信号，0 = 纯 outcome reward</span></li>
+        <li>$\pi_T$ &mdash; 教师策略的选择<br><span class="muted">哪个模型、什么 conditioning、什么 privileged info</span></li>
+      </ul>
+    </div>
+    <div class="col">
+      <img src="asset/meta-algorithm-method-table.png" class="fig" alt="Method comparison table">
+      <figcaption>所有方法都是 (α, λ, π_T) 的特例 [Brown]</figcaption>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 21b: META-ALGORITHM — CAVEAT -->
+<!-- ============================================================ -->
+<section class="slide" data-num="33 / 37">
+  <span class="section-label">Meta-Algorithm</span>
+  <h2>这个框架的正确读法</h2>
+  <div class="two-col-text-img" style="align-items: start;">
+    <div class="col">
+      <h3>它解释了什么？</h3>
+      <ul>
+        <li>为什么 OPSD 和 OPD <span class="term">dial settings 完全相同</span>（$\alpha=1, \lambda=1$）&mdash; 唯一的区别是 $\pi_T$ 的选择</li>
+        <li>为什么 SFT 可以被看作<em>退化教师的蒸馏</em>：$\pi_T = \delta_{y_{\text{data}}}$，即 one-hot label</li>
+        <li>为什么 RL 是"无教师"：$\lambda=0$，per-token 信号退化为广播 outcome reward</li>
+      </ul>
+      <hr class="rule">
+      <div class="callout" style="border-left-color: var(--accent-gold);">
+        <p><strong>Caveat</strong>：这个参数化是<em>说明性的</em>，不是在建议真的在 $(\alpha, \lambda)$ 的中间地带插值。Brown 明确指出：SFT / RL / OPD 这几个"干净的角落"之所以好用，恰恰是因为不需要 importance-sampling 修正。</p>
+        <p style="margin-top: 0.4em;"><span class="highlight">真正重要的问题不是调这三个旋钮，而是：选定 KL 预算 $\beta$ 后，为当前学生找到最优的教师。</span></p>
+      </div>
+    </div>
+    <div class="col">
+      <img src="asset/meta-algorithm-three-dials.png" class="fig" alt="Three dials">
+      <figcaption>三个旋钮的可视化 [Brown]</figcaption>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE: SECTION — INDUSTRY & FUTURE -->
+<!-- ============================================================ -->
+<section class="slide slide-section" data-num="34 / 37">
+  <div class="section-num">08</div>
+  <h2>产业实践与未来方向</h2>
+  <p>Expert merging 正成为后训练的最终阶段。Pareto 最优教师指出了下一代算法的形状。</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 22: INDUSTRY PIPELINE -->
+<!-- ============================================================ -->
+<section class="slide" data-num="35 / 37">
+  <span class="section-label">Industry Practice</span>
+  <h2>产业实践：Expert Training + OPD Merging</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <h3>完整 Pipeline</h3>
+      <p style="margin-bottom: 0.5em;"><span class="term">Pretrain → SFT → RL/Self-distill → OPD merge</span></p>
+      <ul>
+        <li>GLM5、DeepSeek V4：用 OPD 合并专家能力，最终 checkpoint 不再经过 RL</li>
+        <li>Math/Code 任务偏好 RL 训练的专家</li>
+        <li>Creative writing / knowledge-heavy 任务偏好蒸馏类方法</li>
+      </ul>
+      <hr class="rule">
+      <h3>值得注意</h3>
+      <ul>
+        <li>RL 域：merged 学生几乎总是超越教师</li>
+        <li>Self-distill 域：学生略逊于教师</li>
+        <li>趋势：<span class="highlight">expert merging 正成为后训练最后阶段的标准范式</span></li>
+      </ul>
+    </div>
+    <div class="col">
+      <img src="asset/mimo-v2-benchmark-table.png" class="fig" alt="MiMo-V2 table">
+      <figcaption>MiMo-V2 Flash：各域最佳教师类型及 merged 学生表现 [nrehiew]</figcaption>
+    </div>
+  </div>
+  <p class="muted" style="position: absolute; bottom: 3vh; left: 8vw; font-size: 0.72rem;">
+    Ref: <a href="https://arxiv.org/abs/2601.02780" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">MiMo-V2 Flash Technical Report (2026)</a>
+    &middot; <a href="https://arxiv.org/abs/2602.15763" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">GLM-5 Technical Report (2026)</a>
+    &middot; <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro" target="_blank" style="color: var(--warm-gray); text-decoration: underline; text-underline-offset: 2px;">DeepSeek V4 (2026)</a>
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 23: PARETO OPTIMAL -->
+<!-- ============================================================ -->
+<section class="slide" data-num="36 / 37">
+  <span class="section-label">Future</span>
+  <h2>Pareto 最优教师与未来方向</h2>
+  <div class="two-col-text-img">
+    <div class="col">
+      <h3>最优教师问题</h3>
+      <p>我们想要的教师策略应该：在每步更新中最大化 reward 改善，同时受 KL 约束保持稳定。</p>
+      <div style="margin: 0.8em 0; font-size: 0.95rem;">
+        $$\max_{\pi_T} \; \mathbb{E}_{x,\, \hat{y} \sim \pi_T}\!\left[ R(\hat{y}) - R(\pi_\theta) \right] - \beta \cdot \mathbb{E}_x\!\left[ D_{\text{KL}}\!\left(\pi_T(\cdot|x) \,\|\, \pi_\theta(\cdot|x)\right) \right]$$
+      </div>
+      <h3>理想算法的形状</h3>
+      <ul>
+        <li>蒸馏的<span class="highlight">密度</span></li>
+        <li>RL 的<span class="highlight">无偏性</span></li>
+        <li>两者共有的 <span class="highlight">on-policy 性质</span></li>
+      </ul>
+    </div>
+    <div class="col">
+      <img src="asset/teacher-pareto-curve.png" class="fig" alt="Pareto curve">
+      <figcaption>Teacher Pareto Curve：不同方法是不同 β 值下的点 [Brown]</figcaption>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 24: CLOSING -->
+<!-- ============================================================ -->
+<section class="slide slide-closing" data-num="37 / 37">
+  <h2 style="font-size: clamp(1.8rem, 3vw, 2.6rem); margin-bottom: 0.6em;">Core Takeaways</h2>
+  <hr class="rule" style="background: var(--warm-gray-light); margin: 0 auto 1.2em;">
+  <div style="text-align: left; max-width: 70%; margin: 0 auto;">
+    <ul style="margin-bottom: 1.5em;">
+      <li style="color: var(--parchment); margin-bottom: 0.7em;"><span style="color: var(--accent-gold); font-weight: 700;">On-policy 数据是承重件</span> &mdash; 不是 RL 特殊，是 on-policy 采样提供隐式 KL 正则化</li>
+      <li style="color: var(--parchment); margin-bottom: 0.7em;"><span style="color: var(--accent-gold); font-weight: 700;">天花板不同</span> &mdash; SFT 受教师约束，RL 受验证器约束，OPD 介于两者之间</li>
+      <li style="color: var(--parchment); margin-bottom: 0.7em;"><span style="color: var(--accent-gold); font-weight: 700;">梯度特性决定稳定性</span> &mdash; RL 稀疏无偏，SFT 稠密分散，OPSD 稠密集中（危险）</li>
+      <li style="color: var(--parchment); margin-bottom: 0.7em;"><span style="color: var(--accent-gold); font-weight: 700;">Expert merging 成为主流</span> &mdash; 分域训练专家，OPD 合并为最终模型</li>
+    </ul>
+  </div>
+  <p style="margin-top: 1em; font-family: var(--font-en); font-size: 0.85rem; letter-spacing: 0.05em;">
+    nrehiew (2026) &middot; Brown &amp; Claude Opus 4.7 (2026) &middot; Lu et al. (2025) &middot; Zhao et al. (2026) &middot; Shenfeld et al. (2026)
+  </p>
+</section>
+
+</div><!-- /deck -->
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const navHint = document.getElementById('navHint');
+  let current = 0;
+  const total = slides.length;
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    progress.style.width = ((current + 1) / total * 100) + '%';
+    if (current > 0 && navHint) { navHint.style.display = 'none'; }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault(); goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault(); goTo(current - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault(); goTo(0);
+    } else if (e.key === 'End') {
+      e.preventDefault(); goTo(total - 1);
+    }
+  });
+
+  // Touch support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', function(e) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { dx < 0 ? goTo(current + 1) : goTo(current - 1); }
+  });
+
+  // Click on right/left half (skip if clicking a link)
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('a')) return;
+    if (e.clientX > window.innerWidth * 0.6) goTo(current + 1);
+    else if (e.clientX < window.innerWidth * 0.4) goTo(current - 1);
+  });
+
+  // Init
+  goTo(0);
+})();
+</script>
+</body>
+</html>
