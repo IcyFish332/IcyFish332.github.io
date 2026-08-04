@@ -14,7 +14,7 @@ hideSummary: true
 showtoc: false
 ---
 
-Hello! I'm **Siyuan Lu**, a PhD student in Computer Science and Technology through a joint program between [Zhejiang University](https://www.zju.edu.cn/english/), [Westlake University](https://en.westlake.edu.cn), and [Shanghai Innovation Institute](https://www.sii.edu.cn/). I am honored to be part of the institute's second PhD cohort, working under the supervision of [Prof. Tao LIN](https://tlin-taolin.github.io) from Westlake University and [Prof. Weinan Zhang](https://wnzhang.net/) from [Shanghai Jiao Tong University](https://en.sjtu.edu.cn/).
+Hello! I'm **Siyuan Lu**, a PhD student in Computer Science and Technology through a joint program between [Zhejiang University](https://www.zju.edu.cn/english/), [Westlake University](https://en.westlake.edu.cn), and [Shanghai Innovation Institute](https://www.sii.edu.cn/). I am honored to be part of the institute's second PhD cohort, working under the supervision of [Prof. Tao LIN](https://tlin-taolin.github.io) from Westlake University and [Prof. Pengfei Liu](http://pfliu.com/) from [Generative Artificial Intelligence Research Lab](https://plms.ai//).
 
 I recently graduated from [Beijing University of Post and Telecommunications](https://www.bupt.edu.cn/) with a Bachelor's degree in Internet of Things Engineering through a joint program with [Queen Mary University of London](https://www.qmul.ac.uk/).
 
@@ -31,8 +31,8 @@ I recently graduated from [Beijing University of Post and Telecommunications](ht
 
 ### 🎯 Research Interests
 
-- LLM-based Multi-Agent System (MAS) (See [MorphAgent](https://arxiv.org/abs/2410.15048) and [MASArena](https://github.com/LINs-lab/MASArena))
-- Self-evolving Agent (I'm still learning it!)
+- Agentic RL (See [Environment Tuning](https://arxiv.org/abs/2510.10197) and [AWorld Technical Report](https://arxiv.org/abs/2508.20404))
+- Recursive self-improvement (RSI) (I'm still working on it!)
 
 ---
 
@@ -53,9 +53,9 @@ You can find the full list of my publications [here](/publication/).
       <span onclick="window.open('https://arxiv.org/abs/2510.10197', '_blank')" style="cursor: pointer;">
         <img src="https://img.shields.io/badge/arXiv-2510.10197-b31b1b?logo=arXiv" alt="arXiv">
       </span>
-      <!-- <span onclick="window.open('https://github.com/inclusionAI', '_blank')" style="cursor: pointer;">
-        <img src="https://img.shields.io/badge/Code-Coming%20Soon-gray?logo=github" alt="Code Coming Soon">
-      </span> -->
+      <span onclick="window.open('https://github.com/inclusionAI', '_blank')" style="cursor: pointer;">
+        <img src="https://img.shields.io/github/stars/inclusionAI/AWorld-RL?logo=github&label=EnvTuning" alt="GitHub Repo stars">
+      </span>
     </div>
   </li>
   <li style="margin-bottom: 10px;">
@@ -78,7 +78,7 @@ You can find the full list of my publications [here](/publication/).
         <img src="https://img.shields.io/badge/arXiv-2508.14104-b31b1b?logo=arXiv" alt="arXiv">
       </span>
       <span onclick="window.open('https://github.com/tanghaom/AppEvalPilot', '_blank')" style="cursor: pointer;">
-        <img src="https://img.shields.io/github/stars/tanghaom/AppEvalPilot?logo=github&label=tanghaom/AppEvalPilot" alt="GitHub Repo stars">
+        <img src="https://img.shields.io/github/stars/tanghaom/AppEvalPilot?logo=github&label=AppEvalPilot" alt="GitHub Repo stars">
       </span>
     </div>
   </li>
@@ -86,20 +86,20 @@ You can find the full list of my publications [here](/publication/).
 
 *Equal contributions. †Corresponding author
 
----
+<!-- ---
 
 ### 🛠️ Projects
 
 - **[MASArena](https://github.com/LINs-lab/MASArena)** (2025.06 - Present)
   - Maintainer and core contributor
   - A comprehensive framework for benchmarking single and multi-agent systems across a wide range of tasks
-  - Evaluating performance, accuracy, and efficiency with built-in visualization and tool integration
+  - Evaluating performance, accuracy, and efficiency with built-in visualization and tool integration -->
 
 ---
 
 ### 💼 Work Experience
 
-- **[Ant Group](https://www.antgroup.com/en)** (2025.06 - Present)
+- **[Ant Group](https://www.antgroup.com/en)** (2025.06 - 2026.06)
   - Research Intern at <img src="/images/aworld_logo.png" alt="AWorld" style="height: 22px; vertical-align: text-bottom; margin: 0 0px 0 0px; display: inline;"> AWorld Team, [InclusionAI](https://github.com/inclusionAI)
   - Mentor: [Chenyi Zhuang](https://www.linkedin.com/in/chenyi-zhuang-8379b123)
 
