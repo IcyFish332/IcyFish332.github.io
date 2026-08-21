@@ -31,7 +31,8 @@ I recently graduated from [Beijing University of Post and Telecommunications](ht
 
 ### 🎯 Research Interests
 
-- Agentic RL (See [Environment Tuning](https://arxiv.org/abs/2510.10197) and [AWorld Technical Report](https://arxiv.org/abs/2508.20404))
+- Agentic RL (See [Environment Tuning](https://arxiv.org/abs/2510.10197) and [CrEST](https://arxiv.org/abs/2608.13179))
+- RL Infra & Algo Co-design (See [AWorld Tech Report](https://arxiv.org/abs/2508.20404))
 - Recursive self-improvement (RSI) (I'm still working on it!)
 
 ---
@@ -46,6 +47,15 @@ I recently graduated from [Beijing University of Post and Telecommunications](ht
 You can find the full list of my publications [here](/publication/).
 
 <ul>
+  <li style="margin-bottom: 10px;">
+    <b>Teach the Magnitude, Not the Direction: Verifier-Bounded Credit Assignment for Multi-Turn Multi-step LLM Agents</b><br>
+    <i>Zechuan Wang*</i>, <i><b>Siyuan Lu*</b></i>, <i>Hongxuan Zhang</i>, <i>Linjian Mo</i>, <i>Chenyi Zhuang</i>, <i>Leilei Gan†</i><br>
+    <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
+      <span onclick="window.open('https://arxiv.org/abs/2608.13179', '_blank')" style="cursor: pointer;">
+        <img src="https://img.shields.io/badge/arXiv-2608.13179-b31b1b?logo=arXiv" alt="arXiv">
+      </span>
+    </div>
+  </li>
   <li style="margin-bottom: 10px;">
     <b>Don't Just Fine-tune the Agent, Tune the Environment</b><br>
     <i><b>Siyuan Lu*</b></i>, <i>Zechuan Wang*</i>, <i>Hongxuan Zhang</i>, <i>Qintong Wu</i>, <i>Leilei Gan†</i>, <i>Chenyi Zhuang†</i>, <i>Jinjie Gu</i>, <i>Tao Lin†</i><br>
@@ -67,18 +77,6 @@ You can find the full list of my publications [here](/publication/).
       </span>
       <span onclick="window.open('https://github.com/inclusionAI/AWorld', '_blank')" style="cursor: pointer;">
         <img src="https://img.shields.io/github/stars/inclusionAI/AWorld?logo=github&label=inclusionAI/AWorld" alt="GitHub Repo stars">
-      </span>
-    </div>
-  </li>
-  <li style="margin-bottom: 10px;">
-    <b>You Don't Know Until You Click: Automated GUI Testing for Production-Ready Software Evaluation</b><br>
-    <i>Yutong Bian</i>, <i>Xianhao Lin</i>, <i>Yupeng Xie</i>, <i>Tianyang Liu</i>, <i>Mingchen Zhuge</i>, <i><b>Siyuan Lu</b></i>, <i>Haoming Tang</i>, <i>Jinlin Wang</i>, <i>Jiayi Zhang</i>, <i>Jiaqi Chen</i>, <i>Xiangru Tang</i>, <i>Yongxin Ni</i>, <i>Sirui Hong</i>, <i>Chenglin Wu†</i><br>
-    <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
-      <span onclick="window.open('https://arxiv.org/abs/2508.14104', '_blank')" style="cursor: pointer;">
-        <img src="https://img.shields.io/badge/arXiv-2508.14104-b31b1b?logo=arXiv" alt="arXiv">
-      </span>
-      <span onclick="window.open('https://github.com/tanghaom/AppEvalPilot', '_blank')" style="cursor: pointer;">
-        <img src="https://img.shields.io/github/stars/tanghaom/AppEvalPilot?logo=github&label=AppEvalPilot" alt="GitHub Repo stars">
       </span>
     </div>
   </li>

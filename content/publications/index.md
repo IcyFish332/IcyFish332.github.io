@@ -17,6 +17,16 @@ showtoc: false
 
 <ul>
   <li style="margin-bottom: 10px;">
+    <b>Teach the Magnitude, Not the Direction: Verifier-Bounded Credit Assignment for Multi-Turn Multi-step LLM Agents</b><br>
+    <i>Zechuan Wang*</i>, <i><b>Siyuan Lu*</b></i>, <i>Hongxuan Zhang</i>, <i>Linjian Mo</i>, <i>Chenyi Zhuang</i>, <i>Leilei Gan†</i><br>
+    EMNLP 2026 Main<br>
+    <div style="display: inline-flex; gap: 10px; margin-top: 5px;">
+      <span onclick="window.open('https://arxiv.org/abs/2608.13179', '_blank')" style="cursor: pointer;">
+        <img src="https://img.shields.io/badge/arXiv-2608.13179-b31b1b?logo=arXiv" alt="arXiv">
+      </span>
+    </div>
+  </li>
+  <li style="margin-bottom: 10px;">
     <b>Don't Just Fine-tune the Agent, Tune the Environment</b><br>
     <i><b>Siyuan Lu*</b></i>, <i>Zechuan Wang*</i>, <i>Hongxuan Zhang</i>, <i>Qintong Wu</i>, <i>Leilei Gan†</i>, <i>Chenyi Zhuang†</i>, <i>Jinjie Gu</i>, <i>Tao Lin†</i><br>
     ICLR 2026<br>
