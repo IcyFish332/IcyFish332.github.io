@@ -16,8 +16,10 @@
   /* Palette follows the 上海创智学院 badge: SII navy from the ring and lettering,
      and the lime → teal → blue → indigo gradient of the "S" ribbon. Each hue keeps
      one meaning across the deck: navy = structure, teal = this thesis / key point,
-     green = success, red = problems only. The deck is laid out on a fixed
-     1920x1080 canvas and scaled to the window, so screenshot/PDF = projector. */
+     green = success, red = problems only. The deck is designed on a 1920x1080
+     canvas and scaled to the window; when the window is not 16:9 the canvas grows
+     along the spare axis (--cw / --ch) instead of letterboxing, and --ox keeps the
+     1728px content column centred. Defaults below = the 16:9 / PDF layout. */
   :root {
     --bg: #F6F8FB;
     --surface: #FFFFFF;
@@ -50,6 +52,11 @@
     --font-cn: 'Noto Serif SC', 'Songti SC', 'Source Han Serif SC', 'SimSun', serif;
     --font-en: Charter, 'Bitstream Charter', 'Georgia', 'Noto Serif SC', serif;
     --font-mono: 'SF Mono', 'Fira Code', 'Consolas', 'Noto Serif SC', monospace;
+
+    --cw: 1920px;
+    --ch: 1080px;
+    --chf: 1080px;   /* uncapped height: cover / closing slides always fill the window */
+    --ox: 0px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -57,17 +64,19 @@
   html, body {
     width: 100%; height: 100%;
     overflow: hidden;
-    background: #0B1F40;
+    background: var(--bg);
     font-family: var(--font-cn);
     color: var(--ink);
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
+  body.on-cover { background: #0A2A5E; }
+
   .deck {
     position: absolute;
     left: 50%; top: 50%;
-    width: 1920px; height: 1080px;
+    width: var(--cw); height: var(--ch);
     transform: translate(-50%, -50%);
     transform-origin: center center;
   }
@@ -75,12 +84,12 @@
   .slide {
     position: absolute;
     top: 0; left: 0;
-    width: 1920px; height: 1080px;
+    width: var(--cw); height: var(--ch);
     background: var(--bg);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 104px 96px 64px;
+    padding: 104px calc(96px + var(--ox)) 64px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.45s ease;
@@ -96,7 +105,7 @@
   .slide:not(.slide-title):not(.slide-closing)::before {
     content: '';
     position: absolute;
-    top: 26px; right: 72px;
+    top: 26px; right: calc(72px + var(--ox));
     width: 62px; height: 62px;
     border-radius: 50%;
     background: url("assets/sii_logo.png") center / cover no-repeat;
@@ -119,7 +128,7 @@
     content: attr(data-num);
     position: absolute;
     bottom: 34px;
-    right: 72px;
+    right: calc(72px + var(--ox));
     font-family: var(--font-en);
     font-size: 18px;
     color: var(--ink-3);
@@ -130,7 +139,7 @@
   .section-label {
     position: absolute;
     top: 44px;
-    left: 96px;
+    left: calc(96px + var(--ox));
     font-family: var(--font-cn);
     font-size: 18px;
     font-weight: 500;
@@ -446,6 +455,10 @@
     width: 12px;
     background: var(--ribbon-v);
   }
+  .slide-title, .slide-closing {
+    top: calc((var(--ch) - var(--chf)) / 2);
+    height: var(--chf);
+  }
   .slide-title {
     justify-content: flex-end;
     padding-bottom: 130px;
@@ -472,7 +485,7 @@
   }
   .slide-title .logo {
     position: absolute;
-    top: 84px; right: 96px;
+    top: 84px; right: calc(96px + var(--ox));
     width: 160px; height: 160px;
     border-radius: 50%;
     box-shadow: 0 0 0 6px #FFFFFF, 0 10px 36px rgba(0,0,0,0.28);
@@ -530,18 +543,35 @@
     z-index: 100;
   }
 
+  /* Start-up hint: shown on the cover only, fades out in full screen */
   .nav-hint {
     position: fixed;
-    bottom: 1.5vh;
+    bottom: 2.2vh;
     left: 50%;
     transform: translateX(-50%);
-    font-family: var(--font-en);
-    font-size: 12px;
-    color: var(--ink-3);
+    font-family: var(--font-cn);
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
     letter-spacing: 0.08em;
-    opacity: 0.6;
+    white-space: nowrap;
     z-index: 99;
+    transition: opacity 0.4s ease;
   }
+  .nav-hint.hidden { opacity: 0; pointer-events: none; }
+  .nav-hint .key {
+    display: inline-block;
+    min-width: 1.7em;
+    padding: 0 0.4em;
+    margin-right: 0.4em;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 3px;
+    font-family: var(--font-en);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* Full screen: the cursor hides after a moment without movement */
+  html.hide-cursor, html.hide-cursor * { cursor: none !important; }
 
   /* Rehearsal timer (T to toggle), never printed */
   .timer {
@@ -609,11 +639,12 @@
   }
   .overview-thumb:hover { border-color: var(--brand-2); }
   .overview-thumb.is-current { border-color: var(--lime); }
+  .overview-thumb-inner .slide { top: 0 !important; height: var(--ch) !important; }
   .overview-thumb-inner {
     position: absolute;
     top: 0; left: 0;
-    width: 1920px;
-    height: 1080px;
+    width: var(--cw);
+    height: var(--ch);
     transform-origin: top left;
     pointer-events: none;
   }
@@ -630,6 +661,7 @@
   /* Print / PDF: one 1920x1080 page per slide */
   @page { size: 1920px 1080px; margin: 0; }
   @media print {
+    :root { --cw: 1920px !important; --ch: 1080px !important; --chf: 1080px !important; --ox: 0px !important; }
     html, body { width: 1920px; height: auto; overflow: visible; background: var(--bg); }
     .deck { position: static; transform: none !important; width: 1920px; height: auto; }
     .slide {
@@ -645,7 +677,7 @@
 <body>
 
 <div class="progress-bar" id="progress"></div>
-<div class="nav-hint" id="navHint">← →  or space  ·  G = overview  ·  T = timer</div>
+<div class="nav-hint" id="navHint"><span class="key">F</span>全屏放映　·　<span class="key">← →</span>翻页　·　<span class="key">G</span>总览　·　<span class="key">T</span>计时</div>
 <div class="timer" id="timer">00:00</div>
 
 <div class="deck" id="deck">
@@ -1727,9 +1759,24 @@
     else s.dataset.num = (++mainIdx) + ' / ' + mainCount;
   });
 
+  // Scale the 1920x1080 design to the window, then let the canvas grow along the
+  // spare axis so the slide background fills the window. Height growth stops at
+  // 4:3; beyond that the strip left over takes the slide's background colour,
+  // except on the cover / closing slides, which always fill the full height.
+  const BASE_W = 1920, BASE_H = 1080, MAX_H = 1440;
+  let canvasW = BASE_W, canvasH = BASE_H;
   function fit() {
-    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const s = Math.min(vw / BASE_W, vh / BASE_H);
+    canvasW = vw / s;
+    canvasH = Math.min(vh / s, MAX_H);
+    const root = document.documentElement.style;
+    root.setProperty('--cw', canvasW + 'px');
+    root.setProperty('--ch', canvasH + 'px');
+    root.setProperty('--chf', (vh / s) + 'px');
+    root.setProperty('--ox', ((canvasW - BASE_W) / 2) + 'px');
     deck.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+    if (overviewEl && overviewEl.classList.contains('open')) sizeThumbs();
   }
   window.addEventListener('resize', fit);
   fit();
@@ -1739,10 +1786,43 @@
     slides[current].classList.remove('active');
     current = n;
     slides[current].classList.add('active');
+    document.body.classList.toggle('on-cover',
+      slides[current].classList.contains('slide-title') || slides[current].classList.contains('slide-closing'));
     progress.style.width = ((current + 1) / total * 100) + '%';
     history.replaceState(null, '', '#slide=' + (current + 1));
-    if (current > 0 && navHint) { navHint.style.display = 'none'; }
+    updateHint();
   }
+
+  // Full screen (F). Browsers only grant it in response to a key press or click,
+  // so it cannot start by itself when the file is opened.
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function toggleFullscreen() {
+    const el = document.documentElement;
+    const req = isFullscreen()
+      ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+      : (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+    if (req && req.catch) req.catch(function() {});
+  }
+  function updateHint() {
+    navHint.classList.toggle('hidden', current !== 0 || isFullscreen());
+  }
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(function(ev) {
+    document.addEventListener(ev, function() { updateHint(); wakeCursor(); });
+  });
+
+  let cursorTimer = null;
+  function wakeCursor() {
+    document.documentElement.classList.remove('hide-cursor');
+    clearTimeout(cursorTimer);
+    if (isFullscreen()) {
+      cursorTimer = setTimeout(function() {
+        if (!isOverviewOpen()) document.documentElement.classList.add('hide-cursor');
+      }, 2500);
+    }
+  }
+  document.addEventListener('mousemove', wakeCursor);
 
   // Rehearsal timer: 15-minute hard limit, turns red after 14:00
   let timerStart = null, timerId = null;
@@ -1818,18 +1898,22 @@
     thumbs.forEach(function(t) { t.classList.toggle('is-current', parseInt(t.dataset.idx) === current); });
     overviewEl.classList.add('open');
     requestAnimationFrame(function() {
-      var firstThumb = overviewEl.querySelector('.overview-thumb');
-      if (firstThumb) {
-        var scale = firstThumb.offsetWidth / 1920;
-        overviewEl.querySelectorAll('.overview-thumb-inner').forEach(function(el) {
-          el.style.transform = 'scale(' + scale + ')';
-        });
-        overviewEl.querySelectorAll('.overview-thumb').forEach(function(el) {
-          el.style.height = (1080 * scale) + 'px';
-        });
-      }
+      sizeThumbs();
       var cur = overviewEl.querySelector('.is-current');
       if (cur) cur.scrollIntoView({ block: 'center', behavior: 'instant' });
+    });
+  }
+
+  // Thumbnails mirror the live canvas, so they match the window's aspect ratio.
+  function sizeThumbs() {
+    var firstThumb = overviewEl.querySelector('.overview-thumb');
+    if (!firstThumb) return;
+    var scale = firstThumb.offsetWidth / canvasW;
+    overviewEl.querySelectorAll('.overview-thumb-inner').forEach(function(el) {
+      el.style.transform = 'scale(' + scale + ')';
+    });
+    overviewEl.querySelectorAll('.overview-thumb').forEach(function(el) {
+      el.style.height = (canvasH * scale) + 'px';
     });
   }
 
@@ -1860,6 +1944,8 @@
       e.preventDefault(); buildOverview();
     } else if (e.key === 't' || e.key === 'T') {
       e.preventDefault(); toggleTimer();
+    } else if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey) {
+      e.preventDefault(); toggleFullscreen();
     } else if (e.key === 'Escape') {
       e.preventDefault(); closeOverview();
     }
