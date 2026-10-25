@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>路思远 · 博士生开题报告</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
+<script defer src="vendor/katex/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&display=swap');
+
+  /* Palette follows the 上海创智学院 badge: SII navy from the ring and lettering,
+     and the lime → teal → blue → indigo gradient of the "S" ribbon. Each hue keeps
+     one meaning across the deck: navy = structure, teal = this thesis / key point,
+     green = success, red = problems only. The deck is laid out on a fixed
+     1920x1080 canvas and scaled to the window, so screenshot/PDF = projector. */
+  :root {
+    --bg: #F6F8FB;
+    --surface: #FFFFFF;
+    --ink: #16213A;
+    --ink-2: #4E5A6E;
+    --ink-3: #8A95A8;
+    --rule: #DCE3EC;
+    --line: #B9C3D2;
+
+    --brand: #0B3D91;
+    --brand-2: #3366B0;
+    --brand-faint: #ECF2FA;
+    --brand-deep: #0A2A5E;
+
+    --teal: #2A9D99;
+    --teal-ink: #11787A;
+    --teal-faint: #E6F4F3;
+    --green: #6AAA45;
+    --green-ink: #3F7F22;
+    --green-faint: #EEF6E7;
+    --lime: #9ACD5C;
+    --alert: #B9423A;
+    --alert-faint: #FBECEA;
+
+    --ribbon: linear-gradient(90deg, #8DC453 0%, #3FA8A6 42%, #3A8DB2 70%, #5A61A3 100%);
+    --ribbon-v: linear-gradient(180deg, #8DC453 0%, #3FA8A6 42%, #3A8DB2 70%, #5A61A3 100%);
+    --cover: radial-gradient(1100px 680px at 88% 8%, rgba(42,157,153,0.22) 0%, rgba(42,157,153,0) 60%),
+             linear-gradient(155deg, #0D3A85 0%, #0A2A5E 55%, #071D45 100%);
+
+    --font-cn: 'Noto Serif SC', 'Songti SC', 'Source Han Serif SC', 'SimSun', serif;
+    --font-en: Charter, 'Bitstream Charter', 'Georgia', 'Noto Serif SC', serif;
+    --font-mono: 'SF Mono', 'Fira Code', 'Consolas', 'Noto Serif SC', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: #0B1F40;
+    font-family: var(--font-cn);
+    color: var(--ink);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .deck {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 1920px; height: 1080px;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1920px; height: 1080px;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 104px 96px 64px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Small institute badge in the top-right corner of every content slide */
+  .slide:not(.slide-title):not(.slide-closing)::before {
+    content: '';
+    position: absolute;
+    top: 26px; right: 72px;
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    background: url("assets/sii_logo.png") center / cover no-repeat;
+  }
+
+  /* Titles stay pinned at the top; the body takes the remaining height and
+     centers its content so lighter slides don't leave a dead bottom band. */
+  .slide > .body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding-top: 8px;
+    padding-bottom: 16px;
+  }
+  .slide > .body::before { content: ''; flex: 2 1 0; }
+  .slide > .body::after { content: ''; flex: 3 1 0; }
+
+  .slide::after {
+    content: attr(data-num);
+    position: absolute;
+    bottom: 34px;
+    right: 72px;
+    font-family: var(--font-en);
+    font-size: 18px;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+  }
+
+  /* Eyebrow: a short ribbon-gradient bar + tracking, weight 500 */
+  .section-label {
+    position: absolute;
+    top: 44px;
+    left: 96px;
+    font-family: var(--font-cn);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--brand-2);
+  }
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 4px;
+    border-radius: 2px;
+    background: var(--ribbon);
+    margin-right: 12px;
+    vertical-align: 4px;
+  }
+
+  /* Serif weight locked to 400/500/600; hierarchy from size and color, never 700+ */
+  h1 {
+    font-family: var(--font-cn);
+    font-weight: 600;
+    font-size: 72px;
+    color: var(--ink);
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+
+  h2 {
+    font-family: var(--font-cn);
+    font-weight: 600;
+    font-size: 50px;
+    color: var(--ink);
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
+  }
+
+  h3 {
+    font-family: var(--font-cn);
+    font-weight: 500;
+    font-size: 30px;
+    color: var(--brand);
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  p, li {
+    font-family: var(--font-cn);
+    font-size: 27px;
+    color: var(--ink);
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  .lead {
+    font-size: 26px;
+    color: var(--ink-2);
+    margin-bottom: 26px;
+  }
+
+  .small, .small p, .small li { font-size: 23px; line-height: 1.55; }
+
+  .en { font-family: var(--font-en); }
+
+  .term {
+    font-family: var(--font-en);
+    font-weight: 500;
+    color: var(--brand);
+  }
+
+  .highlight {
+    color: var(--teal-ink);
+    font-weight: 600;
+  }
+
+  strong { font-weight: 600; }
+  em { font-style: normal; font-weight: 500; }
+
+  .muted { color: var(--ink-2); }
+
+  .ref {
+    font-family: var(--font-en);
+    font-size: 0.68em;
+    color: var(--ink-3);
+    margin-left: 0.15em;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  ul { list-style: none; padding-left: 0; }
+
+  ul li {
+    position: relative;
+    padding-left: 1.1em;
+    margin-bottom: 0.45em;
+  }
+
+  ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.68em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand);
+  }
+
+  .rule {
+    width: 96px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--ribbon);
+    margin: 28px 0;
+    border: none;
+  }
+
+  /* Layout helpers */
+  .row { display: flex; gap: 40px; }
+  .col { display: flex; flex-direction: column; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .grow { flex: 1; }
+
+  /* Images: hairline frame + whisper shadow so white-background figures sit cleanly */
+  .fig {
+    display: block;
+    border-radius: 4px;
+    border: 1px solid #E3E9F1;
+    box-shadow: 0 4px 18px rgba(11,61,145,0.06);
+    background: #fff;
+  }
+
+  figcaption, .caption {
+    font-family: var(--font-cn);
+    font-size: 19px;
+    color: var(--ink-2);
+    margin-top: 8px;
+  }
+
+  /* Callout: solid tint, brand bar, 4px radius */
+  .callout {
+    border-left: 3px solid var(--brand);
+    padding: 16px 26px;
+    background: var(--brand-faint);
+    border-radius: 0 4px 4px 0;
+  }
+  .callout p { font-size: 25px; }
+  .callout.alert { border-left-color: var(--alert); background: var(--alert-faint); }
+
+  /* Card: white surface on the cool page, hairline border */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 22px 26px;
+    box-shadow: 0 1px 2px rgba(22,33,58,0.04);
+  }
+  .card h3 { font-size: 28px; margin-bottom: 8px; }
+  .card p, .card li { font-size: 23px; line-height: 1.55; }
+  .card.lg p { font-size: 25px; }
+  .card.blue  { background: var(--brand-faint); border-color: #C9D7EE; }
+  .card.teal  { background: var(--teal-faint); border-color: #BFE2DF; }
+  .card.green { background: var(--green-faint); border-color: #CFE5BF; }
+  .card.alert { background: var(--alert-faint); border-color: #EFC9C5; }
+
+  /* Small label chips */
+  .tag {
+    display: inline-block;
+    font-family: var(--font-cn);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 2px 12px;
+    border-radius: 3px;
+    background: var(--brand-faint);
+    color: var(--brand);
+    vertical-align: 4px;
+  }
+  .tag.teal  { background: var(--teal-faint); color: var(--teal-ink); }
+  .tag.green { background: var(--green-faint); color: var(--green-ink); }
+  .tag.alert { background: var(--alert-faint); color: var(--alert); }
+
+  /* Stat tile */
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 14px 20px;
+    box-shadow: 0 1px 2px rgba(22,33,58,0.04);
+  }
+  .stat .num {
+    font-family: var(--font-en);
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 1.15;
+    color: var(--brand);
+    letter-spacing: 0.01em;
+  }
+  .stat .num.alt { color: var(--teal-ink); }
+  .stat .cap {
+    font-family: var(--font-cn);
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--ink-2);
+    margin-top: 4px;
+  }
+
+  /* Quote: vertical ribbon bar */
+  .quote {
+    position: relative;
+    padding: 4px 0 4px 24px;
+    margin-bottom: 22px;
+  }
+  .quote::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 6px; bottom: 6px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--ribbon-v);
+  }
+  .quote p { font-size: 27px; }
+  .quote .src {
+    font-family: var(--font-en);
+    font-size: 19px;
+    color: var(--ink-2);
+    letter-spacing: 0.04em;
+    margin-top: 4px;
+  }
+
+  /* Flow chips (A -> B -> C) */
+  .flow { display: flex; align-items: center; gap: 14px; flex-wrap: nowrap; }
+  .flow .chip {
+    font-family: var(--font-cn);
+    font-size: 23px;
+    padding: 10px 18px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .flow .chip.key { border-color: var(--teal); color: var(--teal-ink); background: var(--teal-faint); font-weight: 500; }
+  .flow .arr { font-family: var(--font-en); color: var(--ink-3); font-size: 26px; }
+
+  /* Tables */
+  table {
+    border-collapse: collapse;
+    font-family: var(--font-cn);
+    font-size: 22px;
+    width: 100%;
+  }
+  th {
+    font-family: var(--font-cn);
+    font-weight: 500;
+    font-size: 19px;
+    letter-spacing: 0.08em;
+    color: var(--brand);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--brand);
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    vertical-align: top;
+    line-height: 1.45;
+  }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-family: var(--font-en); }
+  tr.best td { color: var(--teal-ink); font-weight: 600; background: var(--teal-faint); }
+
+  /* Diagrams */
+  svg.dg { display: block; overflow: visible; }
+  .dg text { font-family: var(--font-cn); fill: var(--ink); }
+  .dg .en { font-family: var(--font-en); }
+  .dg .t-strong { font-weight: 600; }
+  .dg .t-muted { fill: var(--ink-2); }
+  .dg .t-faint { fill: var(--ink-3); }
+  .dg .t-blue { fill: var(--brand); }
+  .dg .t-teal { fill: var(--teal-ink); }
+  .dg .t-green { fill: var(--green-ink); }
+  .dg .t-alert { fill: var(--alert); }
+  .dg .t-white { fill: #FFFFFF; }
+  /* a color class on a <g> reaches its <text> children unless they set their own */
+  .dg g[class*="t-"] > text:not([class*="t-"]) { fill: inherit; }
+  .dg .box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+  .dg .box-blue { fill: var(--brand-faint); stroke: var(--brand); stroke-width: 2; }
+  .dg .box-teal { fill: var(--teal-faint); stroke: var(--teal); stroke-width: 2; }
+  .dg .box-green { fill: var(--green-faint); stroke: var(--green); stroke-width: 2; }
+  .dg .box-accent { fill: var(--teal-faint); stroke: var(--teal); stroke-width: 2.5; stroke-dasharray: 8 6; }
+  .dg .box-accent-solid { fill: var(--teal-faint); stroke: var(--teal); stroke-width: 2; }
+  .dg .box-alert-solid { fill: var(--alert-faint); stroke: var(--alert); stroke-width: 2; }
+  .dg .fill-blue { fill: var(--brand); }
+  .dg .ln { stroke: var(--ink-2); stroke-width: 2; fill: none; }
+  .dg .ln-faint { stroke: var(--line); stroke-width: 1.5; fill: none; }
+  .dg .ln-blue { stroke: var(--brand); stroke-width: 2.5; fill: none; }
+  .dg .ln-teal { stroke: var(--teal); stroke-width: 2.5; fill: none; }
+  .dg .ln-green { stroke: var(--green); stroke-width: 2.5; fill: none; }
+  .dg .ln-alert { stroke: var(--alert); stroke-width: 2.5; fill: none; }
+  .dg .dash { stroke-dasharray: 7 6; }
+  .dg .axis { stroke: var(--ink-2); stroke-width: 2; fill: none; }
+  .dg .grid { stroke: var(--rule); stroke-width: 1.5; stroke-dasharray: 6 6; fill: none; }
+
+  /* Title slide: deep SII navy, ribbon stripe on the left edge */
+  .slide-title, .slide-closing { background: var(--cover); }
+  .slide-title::before, .slide-closing::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 12px;
+    background: var(--ribbon-v);
+  }
+  .slide-title {
+    justify-content: flex-end;
+    padding-bottom: 130px;
+  }
+  .slide-title .kicker {
+    font-family: var(--font-cn);
+    font-size: 26px;
+    letter-spacing: 0.18em;
+    color: var(--lime);
+    margin-bottom: 26px;
+  }
+  .slide-title h1 { color: #FFFFFF; margin-bottom: 18px; }
+  .slide-title .subtitle {
+    font-family: var(--font-en);
+    font-size: 27px;
+    color: #AFC0DA;
+    letter-spacing: 0.03em;
+  }
+  .slide-title .meta {
+    font-family: var(--font-cn);
+    font-size: 24px;
+    color: #C3CFE3;
+    letter-spacing: 0.06em;
+  }
+  .slide-title .logo {
+    position: absolute;
+    top: 84px; right: 96px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 6px #FFFFFF, 0 10px 36px rgba(0,0,0,0.28);
+  }
+  .slide-title::after { color: rgba(255,255,255,0.3); }
+
+  /* Closing slide */
+  .slide-closing {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .slide-closing h2 { color: #FFFFFF; font-size: 64px; }
+  .slide-closing p { color: #AFC0DA; }
+  .slide-closing::after { color: rgba(255,255,255,0.3); }
+
+  /* Backup slides: muted eyebrow so they read as appendix */
+  .slide.backup .section-label { color: var(--ink-2); }
+  .slide.backup .section-label::before { background: var(--line); }
+
+  /* Gantt: bars walk the ribbon from navy to green */
+  .gantt { display: grid; grid-template-columns: 370px 1fr 360px; column-gap: 28px; align-items: center; }
+  .gantt .hd { font-size: 19px; color: var(--brand); letter-spacing: 0.08em; font-weight: 500; padding-bottom: 10px; border-bottom: 2px solid var(--brand); margin-bottom: 4px; }
+  .gantt .lbl { font-size: 23px; line-height: 1.4; padding: 14px 0; border-bottom: 1px solid var(--rule); height: 100%; display: flex; flex-direction: column; justify-content: center; }
+  .gantt .lbl .d { font-family: var(--font-en); font-size: 19px; color: var(--ink-2); letter-spacing: 0.03em; }
+  .gantt .trk { position: relative; height: 100%; border-bottom: 1px solid var(--rule); }
+  .gantt .trk .bar { position: absolute; top: 50%; height: 34px; transform: translateY(-50%); border-radius: 3px; background: var(--brand); display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 500; color: #FFFFFF; white-space: nowrap; overflow: hidden; }
+  .gantt .trk .bar.mid { background: var(--brand-2); }
+  .gantt .trk .bar.teal { background: #23878A; }
+  .gantt .trk .bar.teal-deep { background: #145F63; }
+  .gantt .trk .bar.green { background: var(--green); }
+  .gantt .trk .bar.gray { background: #AAB4C4; }
+  .gantt .trk .yr { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--rule); }
+  .gantt .out { font-size: 21px; line-height: 1.45; color: var(--ink); padding: 14px 0; border-bottom: 1px solid var(--rule); height: 100%; display: flex; align-items: center; }
+  .gantt .axis { position: relative; height: 28px; }
+  .gantt .axis span { position: absolute; transform: translateX(-50%); font-family: var(--font-en); font-size: 19px; color: var(--ink-2); }
+
+  /* Innovation rows */
+  .innov { display: grid; grid-template-columns: 84px 200px 1fr 56px 1.35fr; column-gap: 22px; align-items: center; }
+  .innov .n { font-family: var(--font-en); font-weight: 600; font-size: 52px; color: var(--brand); line-height: 1; }
+  .innov .t { font-family: var(--font-cn); font-weight: 600; font-size: 30px; color: var(--ink); }
+  .innov .old { font-size: 25px; line-height: 1.6; color: var(--ink-2); }
+  .innov .arrow { font-family: var(--font-en); font-size: 36px; color: var(--teal); text-align: center; }
+  .innov .new { font-size: 27px; line-height: 1.6; }
+  .innov .cell { padding: 32px 0; border-bottom: 1px solid var(--rule); height: 100%; display: flex; align-items: center; }
+  .innov .hd { font-size: 19px; letter-spacing: 0.08em; color: var(--brand); font-weight: 500; padding-bottom: 10px; border-bottom: 2px solid var(--brand); }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    background: var(--ribbon);
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  .nav-hint {
+    position: fixed;
+    bottom: 1.5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-en);
+    font-size: 12px;
+    color: var(--ink-3);
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+    z-index: 99;
+  }
+
+  /* Rehearsal timer (T to toggle), never printed */
+  .timer {
+    position: fixed;
+    top: 10px; right: 14px;
+    font-family: var(--font-en);
+    font-size: 15px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    background: rgba(10,42,94,0.82);
+    color: #FFFFFF;
+    letter-spacing: 0.06em;
+    z-index: 200;
+    display: none;
+  }
+  .timer.on { display: block; }
+  .timer.warn { background: rgba(185,66,58,0.92); }
+
+  /* Overview grid */
+  .overview-overlay {
+    position: fixed;
+    inset: 0;
+    background: #0B1F40;
+    z-index: 10000;
+    overflow-y: auto;
+    padding: 2.5vh 3vw;
+    display: none;
+  }
+  .overview-overlay.open { display: block; }
+  .overview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2vh;
+    padding: 0 0.5vw;
+  }
+  .overview-header h2 {
+    font-family: var(--font-en);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #AFC0DA;
+    margin: 0;
+  }
+  .overview-header .overview-close {
+    font-family: var(--font-en);
+    font-size: 12px;
+    color: #8A9BB8;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.6vw;
+  }
+  .overview-thumb {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .overview-thumb:hover { border-color: var(--brand-2); }
+  .overview-thumb.is-current { border-color: var(--lime); }
+  .overview-thumb-inner {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1920px;
+    height: 1080px;
+    transform-origin: top left;
+    pointer-events: none;
+  }
+  .overview-thumb-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0.4em 0.6em;
+    background: linear-gradient(transparent, rgba(7,29,69,0.8));
+    font-family: var(--font-cn);
+    font-size: 12px;
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* Print / PDF: one 1920x1080 page per slide */
+  @page { size: 1920px 1080px; margin: 0; }
+  @media print {
+    html, body { width: 1920px; height: auto; overflow: visible; background: var(--bg); }
+    .deck { position: static; transform: none !important; width: 1920px; height: auto; }
+    .slide {
+      position: relative;
+      opacity: 1 !important;
+      transition: none;
+      break-after: page;
+    }
+    .progress-bar, .nav-hint, .timer, .overview-overlay { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="nav-hint" id="navHint">← →  or space  ·  G = overview  ·  T = timer</div>
+<div class="timer" id="timer">00:00</div>
+
+<div class="deck" id="deck">
+
+<!-- ============================================================ -->
+<!-- 1 · TITLE -->
+<!-- ============================================================ -->
+<section class="slide slide-title active">
+  <img class="logo" src="assets/sii_logo.png" alt="上海创智学院">
+  <div class="kicker">上海创智学院 · 博士研究生开题报告</div>
+  <h1>面向自我改进智能体的<br>长程强化学习方法与系统研究</h1>
+  <div class="subtitle">Long-Horizon Reinforcement Learning for Self-Improving Agents: Methods and Systems</div>
+  <hr class="rule" style="margin: 34px 0 26px; width: 120px;">
+  <div class="meta">报告人：路思远　·　专业 / 领域：人工智能　·　导师组组长：温颖　·　2026 年 10 月</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 2 · PROFESSIONAL BACKGROUND -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">个人背景</span>
+  <h2>专业背景：大模型智能体的强化学习后训练</h2>
+  <div class="body">
+  <div class="grid2" style="grid-template-columns: 1fr 1.05fr; gap: 64px;">
+    <div class="col">
+      <h3>教育背景</h3>
+      <ul style="margin-bottom: 26px;">
+        <li><strong>2025 – 至今</strong>　浙江大学 计算机科学与技术 博士在读<br><span class="muted" style="font-size: 24px;">西湖大学联合培养 · 人工智能方向</span></li>
+        <li><strong>2021 – 2025</strong>　北京邮电大学 物联网工程 本科<br><span class="muted" style="font-size: 24px;">伦敦玛丽女王大学联合培养 · 均分 90.97 · 排名 7 / 182</span></li>
+      </ul>
+      <h3>研究经历</h3>
+      <ul>
+        <li><strong>蚂蚁集团 AWorld 团队</strong> · 研究实习 <span class="en muted" style="font-size: 24px;">2025.06 – 2026.06</span><br><span class="muted" style="font-size: 24px;">多轮工具调用的强化学习后训练：冷启动、信用分配、经验生成</span></li>
+        <li><strong>上海创智学院科研轮转</strong> · 导师 刘鹏飞 <span class="en muted" style="font-size: 24px;">2026.03 – 2026.09</span><br><span class="muted" style="font-size: 24px;">SWE 环境规模化合成 · 异步多轮 RL 框架；两项考核均为优秀</span></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>代表性成果 <span class="muted" style="font-size: 22px;">（* 共同第一作者）</span></h3>
+      <div class="col" style="gap: 18px;">
+        <div class="card" style="padding: 20px 26px;">
+          <p style="font-size: 25px;"><strong class="en">Don't Just Fine-tune the Agent, Tune the Environment</strong></p>
+          <p class="muted" style="font-size: 22px;"><span class="en">ICLR 2026</span> · 共同第一作者*（署名第一）· Environment Tuning</p>
+        </div>
+        <div class="card" style="padding: 20px 26px;">
+          <p style="font-size: 25px;"><strong class="en">Teach the Magnitude, Not the Direction</strong></p>
+          <p class="muted" style="font-size: 22px;"><span class="en">EMNLP 2026</span> 主会 · 共同第一作者* · CrEST</p>
+        </div>
+        <div class="card" style="padding: 20px 26px;">
+          <p style="font-size: 25px;"><strong class="en">AWorld: Orchestrating the Training Recipe for Agentic AI</strong></p>
+          <p class="muted" style="font-size: 22px;">技术报告 · 共同第一作者*</p>
+        </div>
+        <p style="margin-top: 6px; font-size: 25px;"><span class="tag">开源</span>　<span class="en">T3RL</span> 作者（<span class="en">50+ stars</span>）· <span class="en">AWorld</span> 贡献者（<span class="en">1.2k stars</span>）</p>
+      </div>
+    </div>
+  </div>
+  <div class="flow" style="margin-top: 44px; gap: 12px;">
+    <span class="chip" style="border: none; background: none; padding-left: 0; color: var(--brand); font-weight: 500;">研究主线</span>
+    <span class="chip">多轮工具调用 RL：<span class="en">ET · CrEST</span></span><span class="arr">→</span>
+    <span class="chip">规模化经验生成：<span class="en">AWorld · T3RL</span></span><span class="arr">→</span>
+    <span class="chip">长程 SWE：环境合成 · 异步 RL</span><span class="arr">→</span>
+    <span class="chip key">本课题：长程 + 自我改进</span>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 3 · RSI: FROM IDEA TO ENGINEERING -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">01 · 选题背景</span>
+  <h2>递归自我改进：从设想走向工程实践</h2>
+  <div class="body">
+  <div class="row" style="gap: 56px; align-items: center;">
+    <div class="col" style="width: 800px;">
+      <div class="quote">
+        <p>超智能机器能够设计出更好的机器——「最后一项需要人类完成的发明」</p>
+        <div class="src">I. J. Good, 1965 <span class="ref">[1]</span></div>
+      </div>
+      <div class="quote">
+        <p>AI 用当前的智能，改进产生其智能的认知机制</p>
+        <div class="src">Yudkowsky, 2008 · Recursive Self-Improvement (RSI)</div>
+      </div>
+      <p class="small muted" style="margin: 6px 0 14px;">大模型智能体在编程、科研等数字化任务上快速进步，这一反馈回路开始可测量：</p>
+      <div class="grid2" style="gap: 20px;">
+        <div class="stat">
+          <div class="num">1% → 26%</div>
+          <div class="cap">某前沿 AI 企业内部研发中，由 AI 在仅有高层监督下独立完成的比例（2026.03 → 2026.08）<span class="ref">[3]</span></div>
+        </div>
+        <div class="stat">
+          <div class="num">7 → 3 个月</div>
+          <div class="cap">AI 可完成任务时长的翻倍周期，2024 年以来明显加速<span class="ref">[3]</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="width: 870px;">
+      <svg class="dg" width="870" height="610" viewBox="0 0 870 610" aria-label="递归自我改进闭环示意">
+        <defs>
+          <marker id="ah-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4E5A6E"/></marker>
+          <marker id="ah-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0B3D91"/></marker>
+          <marker id="ah-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2A9D99"/></marker>
+          <marker id="ah-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6AAA45"/></marker>
+        </defs>
+        <!-- ring -->
+        <circle cx="435" cy="275" r="200" class="ln-faint dash"/>
+        <!-- arcs: clockwise, gaps leave room for node boxes -->
+        <path d="M528.9 98.4 A200 200 0 0 1 625.2 213.2" class="ln-blue" marker-end="url(#ah-blue)"/>
+        <path d="M625.2 336.8 A200 200 0 0 1 528.9 451.6" class="ln-blue" marker-end="url(#ah-blue)"/>
+        <path d="M341.1 451.6 A200 200 0 0 1 244.8 336.8" class="ln-blue" marker-end="url(#ah-blue)"/>
+        <path d="M244.8 213.2 A200 200 0 0 1 341.1 98.4" class="ln-blue" marker-end="url(#ah-blue)"/>
+        <!-- nodes -->
+        <rect x="345" y="38" width="180" height="76" rx="6" class="box-blue"/>
+        <text x="435" y="72" text-anchor="middle" font-size="27" class="t-strong t-blue">生成</text>
+        <text x="435" y="100" text-anchor="middle" font-size="19" class="t-muted">提出候选改进</text>
+
+        <rect x="545" y="237" width="180" height="76" rx="6" class="box-blue"/>
+        <text x="635" y="271" text-anchor="middle" font-size="27" class="t-strong t-blue">验证</text>
+        <text x="635" y="299" text-anchor="middle" font-size="19" class="t-muted">自动评估打分</text>
+
+        <rect x="345" y="436" width="180" height="76" rx="6" class="box-blue"/>
+        <text x="435" y="470" text-anchor="middle" font-size="27" class="t-strong t-blue">筛选</text>
+        <text x="435" y="498" text-anchor="middle" font-size="19" class="t-muted">保留更优者</text>
+
+        <rect x="145" y="237" width="180" height="76" rx="6" class="box-blue"/>
+        <text x="235" y="271" text-anchor="middle" font-size="27" class="t-strong t-blue">复用</text>
+        <text x="235" y="299" text-anchor="middle" font-size="19" class="t-muted">作为下一轮起点</text>
+        <!-- center -->
+        <text x="435" y="262" text-anchor="middle" font-size="40" class="en">S<tspan font-size="26" dy="9">t</tspan><tspan dy="-9"> → S</tspan><tspan font-size="26" dy="9">t+1</tspan></text>
+        <text x="435" y="304" text-anchor="middle" font-size="20" class="t-muted">更强的系统</text>
+        <text x="435" y="332" text-anchor="middle" font-size="20" class="t-muted">产出更强的系统</text>
+        <!-- improvement objects -->
+        <text x="18" y="580" font-size="21" class="t-muted">被改进的对象</text>
+        <rect x="160" y="552" width="150" height="44" rx="4" class="box"/>
+        <text x="235" y="581" text-anchor="middle" font-size="22">任务解</text>
+        <rect x="324" y="552" width="160" height="44" rx="4" class="box"/>
+        <text x="404" y="581" text-anchor="middle" font-size="22">智能体代码</text>
+        <rect x="498" y="552" width="150" height="44" rx="4" class="box"/>
+        <text x="573" y="581" text-anchor="middle" font-size="22">探索策略</text>
+        <rect x="662" y="552" width="160" height="44" rx="4" class="box-accent"/>
+        <text x="742" y="581" text-anchor="middle" font-size="22" class="t-teal t-strong">模型权重 ?</text>
+      </svg>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4 · GAP: IMPROVEMENT STAYS OUTSIDE THE WEIGHTS -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">01 · 选题背景</span>
+  <h2>现有自我改进回路：改进停留在权重之外</h2>
+  <div class="body">
+  <div class="row" style="gap: 44px; align-items: center;">
+    <svg class="dg" width="1000" height="640" viewBox="0 0 1000 640" aria-label="自我改进工作的二维定位图">
+      <!-- quadrant fills -->
+      <rect x="112" y="36" width="433" height="262" class="box-green" style="stroke: none; opacity: .8;"/>
+      <rect x="547" y="300" width="433" height="262" class="box-blue" style="stroke: none; opacity: .8;"/>
+      <rect x="562" y="50" width="404" height="236" rx="8" class="box-accent"/>
+      <!-- midlines + axes -->
+      <line x1="546" y1="36" x2="546" y2="562" class="grid"/>
+      <line x1="112" y1="299" x2="980" y2="299" class="grid"/>
+      <path d="M112 562 L112 30" class="axis" marker-end="url(#ah-gray)"/>
+      <path d="M112 562 L986 562" class="axis" marker-end="url(#ah-gray)"/>
+      <!-- axis labels -->
+      <text x="98" y="172" text-anchor="end" font-size="22" class="t-muted">更新</text>
+      <text x="98" y="436" text-anchor="end" font-size="22" class="t-muted">冻结</text>
+      <text x="34" y="300" text-anchor="middle" font-size="22" class="t-blue t-strong" transform="rotate(-90 34 300)">模型权重</text>
+      <text x="329" y="596" text-anchor="middle" font-size="22" class="t-muted">单步生成 / 单轮推理</text>
+      <text x="763" y="596" text-anchor="middle" font-size="22" class="t-muted">多步、长程的智能体回路</text>
+      <text x="546" y="632" text-anchor="middle" font-size="22" class="t-blue t-strong">回路形态</text>
+
+      <!-- top-left: weight update, single step -->
+      <text x="130" y="72" font-size="21" class="t-green t-strong">在回路中更新权重，但限于单步生成</text>
+      <g font-size="22">
+        <rect x="140" y="102" width="180" height="62" rx="31" class="box"/>
+        <text x="230" y="130" text-anchor="middle" class="en">STaR</text>
+        <text x="230" y="153" text-anchor="middle" font-size="16" class="t-muted">自举推理 [17]</text>
+        <rect x="345" y="102" width="180" height="62" rx="31" class="box"/>
+        <text x="435" y="130" text-anchor="middle" class="en">R-Zero</text>
+        <text x="435" y="153" text-anchor="middle" font-size="16" class="t-muted">双角色协同进化 [18]</text>
+        <rect x="140" y="188" width="180" height="62" rx="31" class="box"/>
+        <text x="230" y="216" text-anchor="middle" class="en">ThetaEvolve</text>
+        <text x="230" y="239" text-anchor="middle" font-size="16" class="t-muted">测试时 RL [7]</text>
+        <rect x="345" y="188" width="180" height="62" rx="31" class="box"/>
+        <text x="435" y="216" text-anchor="middle" class="en">TTT-Discover</text>
+        <text x="435" y="239" text-anchor="middle" font-size="16" class="t-muted">测试时 RL [8]</text>
+      </g>
+
+      <!-- bottom-right: frozen, long-horizon -->
+      <text x="565" y="336" font-size="21" class="t-blue t-strong">长程智能体回路，但权重始终冻结</text>
+      <g font-size="22">
+        <rect x="575" y="364" width="180" height="62" rx="31" class="box"/>
+        <text x="665" y="392" text-anchor="middle" class="en">AlphaEvolve</text>
+        <text x="665" y="415" text-anchor="middle" font-size="16" class="t-muted">改进任务解 [4]</text>
+        <rect x="780" y="364" width="180" height="62" rx="31" class="box"/>
+        <text x="870" y="392" text-anchor="middle" class="en">ADAS</text>
+        <text x="870" y="415" text-anchor="middle" font-size="16" class="t-muted">设计智能体 [16]</text>
+        <rect x="575" y="450" width="180" height="62" rx="31" class="box"/>
+        <text x="665" y="478" text-anchor="middle" class="en">DGM</text>
+        <text x="665" y="501" text-anchor="middle" font-size="16" class="t-muted">改写自身代码 [5]</text>
+        <rect x="780" y="450" width="180" height="62" rx="31" class="box"/>
+        <text x="870" y="478" text-anchor="middle" class="en">Dream-RSI</text>
+        <text x="870" y="501" text-anchor="middle" font-size="16" class="t-muted">改进探索策略 [6]</text>
+      </g>
+
+      <!-- top-right: this thesis -->
+      <text x="764" y="132" text-anchor="middle" font-size="34" class="t-teal t-strong">本课题</text>
+      <text x="764" y="180" text-anchor="middle" font-size="24">权重层的长程自我改进回路</text>
+      <text x="764" y="222" text-anchor="middle" font-size="20" class="t-muted">以长程智能体强化学习，</text>
+      <text x="764" y="252" text-anchor="middle" font-size="20" class="t-muted">让权重进入回路</text>
+    </svg>
+    <div class="col" style="width: 684px; padding-top: 4px;">
+      <h3 style="font-size: 27px;">原作者：权重进入回路是下一步，但代价高</h3>
+      <ul class="small" style="margin-top: 4px;">
+        <li><span class="term">AlphaEvolve</span>：发现 4×4 复矩阵乘法的 48 次标量乘法算法；作者将「把增强能力蒸馏回下一代基座」列为下一步，改进自身的反馈周期<strong>以月计</strong><span class="ref">[4]</span></li>
+        <li><span class="term">DGM</span>：SWE-bench 由 20.0% 升至 50.0%；「改写训练脚本、更新基础模型」留作未来工作，仅改代码一次运行约<strong>两周</strong><span class="ref">[5]</span></li>
+        <li><span class="term">ThetaEvolve / TTT-Discover</span>：权重进入回路确有收益，但 RL 单元是「一次提示—一次生成—一个分数」<span class="ref">[7,8]</span></li>
+        <li><span class="term">Lilian Weng</span>：完整的自我改进需让模型同时更新权重；训练稳定性、Goodhart 效应等仍是开放问题<span class="ref">[Weng, 2026]</span></li>
+      </ul>
+      <div class="callout alert" style="margin-top: 10px;">
+        <p><strong>缺口</strong>：以多步智能体形式运行的长程改进回路，尚未实现有效的权重更新。</p>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 5 · REDUCTION TO LONG-HORIZON AGENTIC RL -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">01 · 选题背景</span>
+  <h2>权重进入回路，本质是长程智能体强化学习</h2>
+  <div class="body">
+  <div class="flow" style="margin: 0 0 34px;">
+    <span class="chip">成百上千轮「提议—执行—评估」</span><span class="arr">→</span>
+    <span class="chip">每轮多步交互：读代码 · 跑实验 · 改实现</span><span class="arr">→</span>
+    <span class="chip">奖励稀疏、高度延迟</span><span class="arr">→</span>
+    <span class="chip key">典型的长程决策任务</span>
+  </div>
+  <div class="grid2" style="gap: 40px;">
+    <div class="card" style="padding: 24px 30px;">
+      <h3>算法瓶颈：组内比较 + 轨迹级信号</h3>
+      <svg class="dg" width="770" height="200" viewBox="0 0 770 200" aria-label="组相对基线退化示意">
+        <circle cx="36" cy="100" r="26" class="box-blue"/>
+        <text x="36" y="108" text-anchor="middle" font-size="24" class="en t-blue">q</text>
+        <g class="ln-faint">
+          <path d="M62 100 L102 31"/><path d="M62 100 L102 77"/><path d="M62 100 L102 123"/><path d="M62 100 L102 169"/>
+        </g>
+        <!-- 4 trajectories of different lengths, all success -->
+        <g class="box-green" style="stroke-width: 1.2;">
+          <rect x="106" y="18" width="24" height="26" rx="3"/><rect x="136" y="18" width="24" height="26" rx="3"/><rect x="166" y="18" width="24" height="26" rx="3"/><rect x="196" y="18" width="24" height="26" rx="3"/><rect x="226" y="18" width="24" height="26" rx="3"/>
+          <rect x="106" y="64" width="24" height="26" rx="3"/><rect x="136" y="64" width="24" height="26" rx="3"/><rect x="166" y="64" width="24" height="26" rx="3"/><rect x="196" y="64" width="24" height="26" rx="3"/><rect x="226" y="64" width="24" height="26" rx="3"/><rect x="256" y="64" width="24" height="26" rx="3"/><rect x="286" y="64" width="24" height="26" rx="3"/><rect x="316" y="64" width="24" height="26" rx="3"/><rect x="346" y="64" width="24" height="26" rx="3"/><rect x="376" y="64" width="24" height="26" rx="3"/>
+          <rect x="106" y="110" width="24" height="26" rx="3"/><rect x="136" y="110" width="24" height="26" rx="3"/><rect x="166" y="110" width="24" height="26" rx="3"/>
+          <rect x="106" y="156" width="24" height="26" rx="3"/><rect x="136" y="156" width="24" height="26" rx="3"/><rect x="166" y="156" width="24" height="26" rx="3"/><rect x="196" y="156" width="24" height="26" rx="3"/><rect x="226" y="156" width="24" height="26" rx="3"/><rect x="256" y="156" width="24" height="26" rx="3"/><rect x="286" y="156" width="24" height="26" rx="3"/>
+        </g>
+        <g font-size="19" class="en t-green">
+          <text x="260" y="38">R=1</text><text x="410" y="84">R=1</text><text x="200" y="130">R=1</text><text x="320" y="176">R=1</text>
+        </g>
+        <line x1="460" y1="10" x2="460" y2="190" class="ln-alert dash"/>
+        <text x="472" y="30" font-size="19" class="t-alert">等待最慢轨迹</text>
+        <text x="490" y="96" font-size="26" class="en">μ = 1,  σ = 0</text>
+        <text x="490" y="140" font-size="24" class="t-alert t-strong">⇒ 优势全部为 0</text>
+        <text x="490" y="176" font-size="19" class="t-muted">同一轨迹各步共享同一优势</text>
+      </svg>
+      <ul class="small" style="margin-top: 12px;">
+        <li>以 <span class="term">GRPO</span> 为代表的组相对方法需对同一任务采样一组轨迹：组内耗时差异大，整组全对 / 全错时信号归零<span class="ref">[9,10]</span></li>
+        <li>无价值函数，只有轨迹级优势：稀疏的终局奖励难以分配到具体步骤</li>
+      </ul>
+    </div>
+    <div class="card" style="padding: 24px 30px;">
+      <h3>系统瓶颈：经验生成远慢于参数更新</h3>
+      <svg class="dg" width="770" height="200" viewBox="0 0 770 200" aria-label="经验生成与参数更新耗时对比">
+        <text x="0" y="56" font-size="22">经验生成</text>
+        <text x="0" y="132" font-size="22">参数更新</text>
+        <rect x="110" y="26" width="560" height="44" rx="3" style="fill: var(--line);"/>
+        <text x="682" y="56" font-size="23" class="en">7695 s</text>
+        <rect x="110" y="102" width="11" height="44" rx="2" class="fill-blue"/>
+        <text x="134" y="132" font-size="23" class="en">144 s</text>
+        <text x="390" y="132" text-anchor="middle" font-size="28" class="t-alert t-strong en">≈ 53×</text>
+        <text x="0" y="190" font-size="18" class="t-muted">GAIA 训练，单节点顺序执行一轮「采样—训练」的耗时 [11]</text>
+      </svg>
+      <ul class="small" style="margin-top: 12px;">
+        <li>长程任务中大量算力等待最慢的轨迹，训练侧长时间空闲</li>
+        <li>训推解耦的<span class="term">异步执行</span>可提升吞吐，但引入策略滞后与离策略偏差，损害稳定性<span class="ref">[12]</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 34px;">
+    <p><strong>二者相互耦合</strong>：异步执行要求算法容忍离策略数据；放弃分组采样又要求更可靠的价值估计 —— <span class="highlight">算法—系统协同设计</span>是本课题的出发点。</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 6 · GOALS & KEY SCIENTIFIC QUESTIONS -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">02 · 研究目标与内容</span>
+  <h2>研究目标与关键科学问题</h2>
+  <div class="body">
+  <div class="callout" style="margin: 0 0 30px;">
+    <p><strong>自我改进智能体</strong>：利用自身与环境交互产生的经验和信号<strong>更新模型权重</strong>，使下一轮能力由当前能力所生成的训练信号决定。</p>
+    <p style="margin-top: 6px;"><strong>总体目标</strong>：研究长程智能体任务上的高效强化学习方法与系统，使模型权重能够<span class="highlight">以可接受的代价进入长程自我改进回路</span>。</p>
+  </div>
+  <div class="grid3" style="gap: 30px;">
+    <div class="card" style="padding: 26px 30px;">
+      <span class="tag">科学问题一 · 对应研究内容一</span>
+      <h3 style="margin-top: 14px; font-size: 31px; color: var(--ink); font-weight: 600;">单条轨迹上的步级信用分配</h3>
+      <p style="font-size: 25px;">长程、仅有终局奖励时，如何在单条轨迹上实现<strong>低方差的步级信用分配</strong>？</p>
+      <p class="muted" style="font-size: 22px; margin-top: 12px;"><strong>难点</strong>：不依赖分组、逐轮验证与外部教师，获得足够准确的状态价值估计；价值模型冷启动，长序列夹杂环境观测、结构不一</p>
+      <hr style="border: none; border-top: 1px solid var(--rule); margin: 16px 0;">
+      <p style="font-size: 23px;"><span class="highlight">目标</span>　样本效率（达到同等性能所需的交互量）与最终性能优于 <span class="en">GRPO</span> 类方法</p>
+    </div>
+    <div class="card" style="padding: 26px 30px;">
+      <span class="tag">科学问题二 · 对应研究内容二</span>
+      <h3 style="margin-top: 14px; font-size: 31px; color: var(--ink); font-weight: 600;">异步训练的效率—稳定性平衡</h3>
+      <p style="font-size: 25px;">经验生成与参数更新解耦后，如何在效率与稳定性之间取得<strong>可控的平衡</strong>？</p>
+      <p class="muted" style="font-size: 22px; margin-top: 12px;"><strong>难点</strong>：一条长轨迹由多个版本的策略先后生成；序列级重要性权重随长度近似指数退化；训推数值不一致、沙箱故障放大偏差</p>
+      <hr style="border: none; border-top: 1px solid var(--rule); margin: 16px 0;">
+      <p style="font-size: 23px;"><span class="highlight">目标</span>　训练稳定前提下，单位时间有效训练样本量显著高于同步训练，缩短墙钟时间</p>
+    </div>
+    <div class="card" style="padding: 26px 30px;">
+      <span class="tag">科学问题三 · 对应研究内容三</span>
+      <h3 style="margin-top: 14px; font-size: 31px; color: var(--ink); font-weight: 600;">回路经验 → 下一轮训练信号</h3>
+      <p style="font-size: 25px;">自我改进回路产生的<strong>非平稳、多策略经验</strong>，能否以及如何转化为下一轮的有效训练信号？</p>
+      <p class="muted" style="font-size: 22px; margin-top: 12px;"><strong>难点</strong>：环境状态随回路不断变化，同一状态往往只有一条反馈、评估代价高；需防止回路自身的偏差放大与奖励投机</p>
+      <hr style="border: none; border-top: 1px solid var(--rule); margin: 16px 0;">
+      <p style="font-size: 23px;"><span class="highlight">目标</span>　在至少一类长程自我改进场景中闭合权重层回路，效率与效果优于冻结权重的回路</p>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 7 · TECHNICAL ROADMAP -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">02 · 研究目标与内容</span>
+  <h2>技术路线</h2>
+  <div class="body">
+  <svg class="dg" width="1728" height="760" viewBox="0 0 1728 760" aria-label="本课题技术路线">
+    <text x="0" y="20" font-size="20" class="t-muted">研究基础（已发表工作）</text>
+    <!-- foundations -->
+    <rect x="0" y="36" width="440" height="104" rx="6" class="box"/>
+    <text x="220" y="78" text-anchor="middle" font-size="27" class="en t-strong">Environment Tuning</text>
+    <text x="220" y="116" text-anchor="middle" font-size="20" class="t-muted">ICLR 2026 · 环境反馈 · 课程学习 · 进度奖励</text>
+    <rect x="470" y="36" width="440" height="104" rx="6" class="box"/>
+    <text x="690" y="78" text-anchor="middle" font-size="27" class="en t-strong">CrEST</text>
+    <text x="690" y="116" text-anchor="middle" font-size="20" class="t-muted">EMNLP 2026 · 轮次级信用分配 · 自教师信号</text>
+    <rect x="1000" y="36" width="610" height="104" rx="6" class="box"/>
+    <text x="1305" y="78" text-anchor="middle" font-size="27" class="en t-strong">AWorld / T3RL</text>
+    <text x="1305" y="116" text-anchor="middle" font-size="20" class="t-muted">技术报告 · 开源框架 · 分布式经验生成 · 多轮训练框架</text>
+    <path d="M220 140 L220 186" class="ln" marker-end="url(#ah-gray)"/>
+    <path d="M690 140 L690 186" class="ln" marker-end="url(#ah-gray)"/>
+    <path d="M1305 140 L1305 186" class="ln" marker-end="url(#ah-gray)"/>
+    <!-- RC1 -->
+    <rect x="0" y="192" width="910" height="190" rx="6" class="box-blue"/>
+    <text x="30" y="240" font-size="29" class="t-blue t-strong">研究内容一：面向单轨迹、终局奖励的长程信用分配</text>
+    <text x="880" y="240" text-anchor="end" font-size="19" class="t-blue">科学问题一</text>
+    <g font-size="23">
+      <text x="40" y="298">· 以状态价值估计取代组内比较</text>
+      <text x="470" y="298">· 面向智能体轨迹的价值模型与训练目标</text>
+      <text x="40" y="346">· 多版本策略经验驱动的价值预训练</text>
+      <text x="470" y="346">· 统计式基线作为过渡与兜底</text>
+    </g>
+    <!-- mutual constraint -->
+    <text x="955" y="266" text-anchor="middle" font-size="19" class="t-blue">相互</text>
+    <text x="955" y="290" text-anchor="middle" font-size="19" class="t-blue">约束</text>
+    <path d="M918 318 L992 318" class="ln-blue" marker-start="url(#ah-blue)" marker-end="url(#ah-blue)"/>
+    <!-- RC2 -->
+    <rect x="1000" y="192" width="610" height="190" rx="6" class="box-blue"/>
+    <text x="1030" y="240" font-size="29" class="t-blue t-strong">研究内容二：异步长程训练系统</text>
+    <text x="1580" y="240" text-anchor="end" font-size="19" class="t-blue">科学问题二</text>
+    <g font-size="23">
+      <text x="1040" y="290">· 训推解耦的异步经验生成</text>
+      <text x="1040" y="325">· 策略滞后下的离策略修正</text>
+      <text x="1040" y="360">· 长轨迹资源管理与故障恢复</text>
+    </g>
+    <path d="M455 382 L455 428" class="ln-teal" marker-end="url(#ah-teal)"/>
+    <path d="M1305 382 L1305 428" class="ln-teal" marker-end="url(#ah-teal)"/>
+    <!-- RC3 -->
+    <rect x="0" y="434" width="1610" height="150" rx="6" class="box-teal"/>
+    <text x="30" y="482" font-size="29" class="t-teal t-strong">研究内容三：算法—系统协同设计与自我改进场景验证</text>
+    <text x="1580" y="482" text-anchor="end" font-size="19" class="t-teal">科学问题三</text>
+    <g font-size="23">
+      <text x="40" y="542">· 离策略数据、价值估计与采样调度联合设计</text>
+      <text x="580" y="542">· 价值估计扩展到回路中非平稳、多版本的经验</text>
+      <text x="1120" y="542">· 闭合权重层回路，对比冻结权重回路</text>
+    </g>
+    <!-- feedback -->
+    <path d="M1610 509 L1660 509 L1660 287 L1616 287" class="ln-teal dash" marker-end="url(#ah-teal)"/>
+    <g font-size="20" class="t-teal" text-anchor="middle">
+      <text x="1696" y="340">场</text><text x="1696" y="366">景</text><text x="1696" y="392">需</text><text x="1696" y="418">求</text><text x="1696" y="444">反</text><text x="1696" y="470">馈</text>
+    </g>
+    <path d="M805 584 L805 630" class="ln-green" marker-end="url(#ah-green)"/>
+    <!-- goal -->
+    <rect x="0" y="636" width="1610" height="118" rx="6" class="box-green"/>
+    <text x="805" y="684" text-anchor="middle" font-size="30" class="t-green t-strong">目标：自我改进智能体</text>
+    <text x="805" y="728" text-anchor="middle" font-size="24" class="t-green">让模型权重以可接受的代价进入长程自我改进回路</text>
+  </svg>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 8 · RESEARCH CONTENT 1 -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">02 · 研究内容一</span>
+  <h2>研究内容一：以状态价值估计取代组内比较</h2>
+  <div class="body">
+  <svg class="dg" width="1728" height="320" viewBox="0 0 1728 320" aria-label="组相对基线与状态价值信用分配对比">
+    <!-- left panel -->
+    <text x="0" y="26" font-size="24" class="t-strong">组相对基线 <tspan class="t-muted" font-size="20" font-weight="400">（GRPO；前期 ET / CrEST 的轮次级变体）</tspan></text>
+    <circle cx="34" cy="180" r="28" class="box-blue"/>
+    <text x="34" y="188" text-anchor="middle" font-size="24" class="en t-blue">q</text>
+    <g class="ln-faint"><path d="M62 180 L104 77"/><path d="M62 180 L104 137"/><path d="M62 180 L104 197"/><path d="M62 180 L104 257"/></g>
+    <g style="stroke-width: 1.2;">
+      <g class="box-green">
+        <rect x="108" y="62" width="30" height="30" rx="3"/><rect x="146" y="62" width="30" height="30" rx="3"/><rect x="184" y="62" width="30" height="30" rx="3"/><rect x="222" y="62" width="30" height="30" rx="3"/><rect x="260" y="62" width="30" height="30" rx="3"/><rect x="298" y="62" width="30" height="30" rx="3"/>
+      </g>
+      <g class="box-alert-solid" style="stroke-width: 1.2;">
+        <rect x="108" y="122" width="30" height="30" rx="3"/><rect x="146" y="122" width="30" height="30" rx="3"/><rect x="184" y="122" width="30" height="30" rx="3"/><rect x="222" y="122" width="30" height="30" rx="3"/><rect x="260" y="122" width="30" height="30" rx="3"/><rect x="298" y="122" width="30" height="30" rx="3"/><rect x="336" y="122" width="30" height="30" rx="3"/><rect x="374" y="122" width="30" height="30" rx="3"/><rect x="412" y="122" width="30" height="30" rx="3"/><rect x="450" y="122" width="30" height="30" rx="3"/>
+      </g>
+      <g class="box-green">
+        <rect x="108" y="182" width="30" height="30" rx="3"/><rect x="146" y="182" width="30" height="30" rx="3"/><rect x="184" y="182" width="30" height="30" rx="3"/><rect x="222" y="182" width="30" height="30" rx="3"/>
+        <rect x="108" y="242" width="30" height="30" rx="3"/><rect x="146" y="242" width="30" height="30" rx="3"/><rect x="184" y="242" width="30" height="30" rx="3"/><rect x="222" y="242" width="30" height="30" rx="3"/><rect x="260" y="242" width="30" height="30" rx="3"/><rect x="298" y="242" width="30" height="30" rx="3"/><rect x="336" y="242" width="30" height="30" rx="3"/><rect x="374" y="242" width="30" height="30" rx="3"/>
+      </g>
+    </g>
+    <g font-size="21" class="en">
+      <text x="340" y="84" class="t-green">R=1</text><text x="492" y="144" class="t-alert">R=0</text><text x="264" y="204" class="t-green">R=1</text><text x="416" y="264" class="t-green">R=1</text>
+    </g>
+    <text x="590" y="110" font-size="24" class="en">A<tspan font-size="16" dy="6">i</tspan><tspan dy="-6"> = (R</tspan><tspan font-size="16" dy="6">i</tspan><tspan dy="-6"> − μ) / σ</tspan></text>
+    <g font-size="21">
+      <text x="590" y="160">· 每个任务需 G 条轨迹</text>
+      <text x="590" y="200">· 同一轨迹各步共享优势</text>
+      <text x="590" y="240" class="t-alert">· 全对 / 全错 ⇒ 优势为 0</text>
+      <text x="590" y="280" class="t-muted">· 轮次级需轮次对齐、逐轮验证</text>
+    </g>
+    <!-- arrow between -->
+    <text x="880" y="186" text-anchor="middle" font-size="44" class="t-teal en">→</text>
+    <!-- right panel -->
+    <text x="940" y="26" font-size="24" class="t-strong t-teal">状态价值估计 <tspan class="t-muted" font-size="20" font-weight="400">（本课题：单条轨迹即可）</tspan></text>
+    <text x="940" y="78" font-size="21" class="en t-blue">V<tspan font-size="15" dy="5">φ</tspan><tspan dy="-5">(s</tspan><tspan font-size="15" dy="5">t</tspan><tspan dy="-5">)</tspan></text>
+    <line x1="1020" y1="208" x2="1660" y2="208" class="ln-faint"/>
+    <g class="box-blue" style="stroke-width: 1.5;">
+      <rect x="1030" y="164" width="34" height="44"/>
+      <rect x="1100" y="160" width="34" height="48"/>
+      <rect x="1170" y="156" width="34" height="52"/>
+      <rect x="1240" y="110" width="34" height="98"/>
+      <rect x="1310" y="122" width="34" height="86"/>
+      <rect x="1380" y="116" width="34" height="92"/>
+      <rect x="1450" y="62" width="34" height="146"/>
+      <rect x="1520" y="54" width="34" height="154"/>
+    </g>
+    <!-- step squares colored by advantage -->
+    <g style="stroke-width: 1.5;">
+      <rect x="1030" y="222" width="34" height="34" rx="4" class="box"/>
+      <rect x="1100" y="222" width="34" height="34" rx="4" class="box"/>
+      <rect x="1170" y="222" width="34" height="34" rx="4" class="box-green"/>
+      <rect x="1240" y="222" width="34" height="34" rx="4" class="box-alert-solid"/>
+      <rect x="1310" y="222" width="34" height="34" rx="4" class="box"/>
+      <rect x="1380" y="222" width="34" height="34" rx="4" class="box-green"/>
+      <rect x="1450" y="222" width="34" height="34" rx="4" class="box"/>
+      <rect x="1520" y="222" width="34" height="34" rx="4" class="box"/>
+    </g>
+    <g class="ln-faint"><path d="M1064 239 L1100 239"/><path d="M1134 239 L1170 239"/><path d="M1204 239 L1240 239"/><path d="M1274 239 L1310 239"/><path d="M1344 239 L1380 239"/><path d="M1414 239 L1450 239"/><path d="M1484 239 L1520 239"/><path d="M1554 239 L1586 239"/></g>
+    <text x="1596" y="247" font-size="21" class="en t-green">R=1</text>
+    <g font-size="22" text-anchor="middle" class="en">
+      <text x="1187" y="286" class="t-green t-strong">+</text>
+      <text x="1257" y="286" class="t-alert t-strong">−</text>
+      <text x="1397" y="286" class="t-green t-strong">+</text>
+    </g>
+    <text x="940" y="245" font-size="21" class="t-muted">智能体步</text>
+    <text x="940" y="286" font-size="21" class="en t-muted">Â<tspan font-size="15" dy="5">t</tspan></text>
+    <text x="1030" y="314" font-size="20" class="t-blue">价值跃迁处获得信用：无需分组、无需逐轮验证、无需外部教师</text>
+  </svg>
+  <div class="grid3" style="gap: 26px; margin-top: 22px;">
+    <div class="card blue">
+      <h3>① 价值模型</h3>
+      <p>面向「模型输出—环境观测」交替、长度与结构不一的智能体轨迹，研究输入表示、训练目标与步级优势的计算<span class="ref">[12]</span></p>
+    </div>
+    <div class="card blue">
+      <h3>② 价值预训练</h3>
+      <p>用训练过程中各版本策略产生的轨迹预训练并持续更新价值模型——多样策略经验缓解冷启动<span class="ref">[34]</span></p>
+    </div>
+    <div class="card blue">
+      <h3>③ 过渡与兜底</h3>
+      <p>以跨迭代（<span class="en">SPO</span>）、跨任务批内（<span class="en">BASIS</span>）统计基线过渡；必要时与组内基线自适应切换<span class="ref">[10,32]</span></p>
+    </div>
+  </div>
+  <div class="row" style="gap: 28px; margin-top: 22px; align-items: stretch;">
+    <div class="card" style="flex: 0 0 760px; padding: 14px 24px; display: flex; flex-direction: column; justify-content: center;">
+      <p style="font-size: 23px;">$\delta_t = r_t + \gamma V_\phi(s_{t+1}) - V_\phi(s_t),\quad \hat{A}_t = \sum_{l \ge 0} (\gamma\lambda)^l \, \delta_{t+l}$</p>
+      <p class="muted" style="font-size: 19px; margin-top: 4px;">起点：PPO + GAE 的步级优势<span class="ref">[29,30]</span>，$t$ 以智能体步为单位</p>
+    </div>
+    <div class="callout grow" style="display: flex; align-items: center;">
+      <p><strong>预期</strong>：不依赖分组采样、逐轮验证与外部教师，样本效率与最终性能优于 <span class="en">GRPO</span> 类及前期轮次级方法。</p>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 9 · RESEARCH CONTENT 2 -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">02 · 研究内容二</span>
+  <h2>研究内容二：训推解耦的异步长程训练系统</h2>
+  <div class="body">
+  <svg class="dg" width="1728" height="374" viewBox="0 0 1728 374" aria-label="同步与异步训练时间线对比">
+    <!-- SYNC -->
+    <text x="0" y="24" font-size="23" class="t-strong">同步：先采样整批，再统一更新</text>
+    <g font-size="19" class="t-muted">
+      <text x="0" y="62">采样 1</text><text x="0" y="96">采样 2</text><text x="0" y="130">采样 3</text><text x="0" y="172">训练</text>
+    </g>
+    <g style="fill: #AFC6E6;">
+      <rect x="110" y="44" width="360" height="26" rx="3"/>
+      <rect x="110" y="78" width="620" height="26" rx="3"/>
+      <rect x="110" y="112" width="240" height="26" rx="3"/>
+      <rect x="820" y="44" width="300" height="26" rx="3"/>
+      <rect x="820" y="78" width="520" height="26" rx="3"/>
+      <rect x="820" y="112" width="200" height="26" rx="3"/>
+    </g>
+    <rect x="110" y="154" width="620" height="26" rx="3" style="fill: none; stroke: var(--line); stroke-dasharray: 5 5; stroke-width: 1.5;"/>
+    <text x="420" y="174" text-anchor="middle" font-size="18" class="t-muted">训练侧空等</text>
+    <rect x="732" y="154" width="84" height="26" rx="3" class="fill-blue"/>
+    <text x="774" y="173" text-anchor="middle" font-size="17" class="t-white">更新</text>
+    <rect x="1340" y="154" width="84" height="26" rx="3" class="fill-blue"/>
+    <text x="1382" y="173" text-anchor="middle" font-size="17" class="t-white">更新</text>
+    <line x1="731" y1="38" x2="731" y2="188" class="ln-alert dash"/>
+    <line x1="1339" y1="38" x2="1339" y2="188" class="ln-alert dash"/>
+    <text x="742" y="34" font-size="18" class="t-alert">同步屏障：等待最慢轨迹</text>
+    <text x="1480" y="96" font-size="21" class="t-muted">GPU 利用率低</text>
+
+    <!-- ASYNC -->
+    <text x="0" y="212" font-size="23" class="t-strong">异步：轨迹完成即入队，训练持续进行</text>
+    <g font-size="19" class="t-muted">
+      <text x="0" y="250">采样 1</text><text x="0" y="284">采样 2</text><text x="0" y="318">采样 3</text><text x="0" y="360">训练</text>
+    </g>
+    <g class="ln-faint dash">
+      <line x1="390" y1="226" x2="390" y2="370"/><line x1="670" y1="226" x2="670" y2="370"/><line x1="950" y1="226" x2="950" y2="370"/><line x1="1230" y1="226" x2="1230" y2="370"/>
+    </g>
+    <!-- bars colored by the policy version that started them -->
+    <rect x="110" y="232" width="300" height="26" rx="3" style="fill: #DCE6F4;"/>
+    <rect x="416" y="232" width="240" height="26" rx="3" style="fill: #AFC6E6;"/>
+    <rect x="662" y="232" width="400" height="26" rx="3" style="fill: #7097CF;"/>
+    <rect x="1068" y="232" width="352" height="26" rx="3" style="fill: #3F6DB4;"/>
+    <rect x="110" y="266" width="760" height="26" rx="3" style="fill: #DCE6F4; stroke: var(--alert); stroke-width: 2;"/>
+    <rect x="876" y="266" width="300" height="26" rx="3" style="fill: #7097CF;"/>
+    <rect x="1182" y="266" width="238" height="26" rx="3" style="fill: #3F6DB4;"/>
+    <rect x="110" y="300" width="220" height="26" rx="3" style="fill: #DCE6F4;"/>
+    <rect x="336" y="300" width="300" height="26" rx="3" style="fill: #DCE6F4;"/>
+    <rect x="642" y="300" width="260" height="26" rx="3" style="fill: #AFC6E6;"/>
+    <rect x="908" y="300" width="330" height="26" rx="3" style="fill: #7097CF;"/>
+    <rect x="1244" y="300" width="176" height="26" rx="3" style="fill: #3F6DB4;"/>
+    <g>
+      <rect x="110" y="342" width="276" height="26" rx="3" class="fill-blue" style="opacity: .55;"/>
+      <rect x="392" y="342" width="274" height="26" rx="3" class="fill-blue" style="opacity: .7;"/>
+      <rect x="672" y="342" width="274" height="26" rx="3" class="fill-blue" style="opacity: .85;"/>
+      <rect x="952" y="342" width="274" height="26" rx="3" class="fill-blue"/>
+      <rect x="1232" y="342" width="188" height="26" rx="3" class="fill-blue"/>
+    </g>
+    <g font-size="17" class="en t-white" text-anchor="middle">
+      <text x="248" y="360">θ<tspan font-size="12" dy="5">0</tspan><tspan dy="-5"> → θ</tspan><tspan font-size="12" dy="5">1</tspan></text><text x="529" y="360">θ<tspan font-size="12" dy="5">1</tspan><tspan dy="-5"> → θ</tspan><tspan font-size="12" dy="5">2</tspan></text><text x="809" y="360">θ<tspan font-size="12" dy="5">2</tspan><tspan dy="-5"> → θ</tspan><tspan font-size="12" dy="5">3</tspan></text><text x="1089" y="360">θ<tspan font-size="12" dy="5">3</tspan><tspan dy="-5"> → θ</tspan><tspan font-size="12" dy="5">4</tspan></text>
+    </g>
+    <text x="490" y="285" text-anchor="middle" font-size="17" class="t-alert">由 θ<tspan font-size="12" dy="5">0</tspan><tspan dy="-5"> 开始生成，期间策略已更新两次</tspan></text>
+    <text x="1480" y="264" font-size="21" class="t-green">吞吐 ↑</text>
+    <text x="1480" y="298" font-size="21" class="t-alert">策略滞后 ↑</text>
+    <text x="1480" y="332" font-size="21" class="t-alert">离策略偏差 ↑</text>
+  </svg>
+  <div class="grid4" style="margin-top: 18px;">
+    <div class="card blue" style="padding: 18px 24px;"><h3>① 异步经验生成</h3><p>轨迹完成即进入训练队列，不再等待整批或整组采样结束</p></div>
+    <div class="card blue" style="padding: 18px 24px;"><h3>② 离策略修正</h3><p>基于推理侧对数概率的 token 级重要性采样与双侧裁剪；限制陈旧度上限，逐步放开异步程度</p></div>
+    <div class="card blue" style="padding: 18px 24px;"><h3>③ 长轨迹管理</h3><p>长轨迹的上下文与显存管理，支撑更长的交互序列</p></div>
+    <div class="card blue" style="padding: 18px 24px;"><h3>④ 沙箱调度与容错</h3><p>大规模沙箱的调度、故障检测与恢复，降低系统引入的数据噪声</p></div>
+  </div>
+  <div class="row" style="gap: 28px; margin-top: 18px; align-items: stretch;">
+    <div class="card" style="flex: 0 0 760px; padding: 8px 26px; display: flex; align-items: center; gap: 28px;">
+      <p style="font-size: 22px;">$\rho_t = \dfrac{\pi_\theta(a_t \mid s_t)}{\pi_{\text{rollout}}(a_t \mid s_t)}$</p>
+      <p style="font-size: 22px;">$\tilde{\rho}_t = \mathrm{clip}\big(\rho_t,\, 1-\epsilon_{\text{low}},\, 1+\epsilon_{\text{high}}\big)$</p>
+    </div>
+    <div class="callout grow" style="display: flex; flex-direction: column; justify-content: center;">
+      <p style="font-size: 22px;"><strong>基础</strong>：<span class="en">AWorld</span> 分布式沙箱（14.6×）· <span class="en">T3RL</span> token 级对齐 · 异步多轮框架 <span class="en" style="white-space: nowrap;">siirl-agentic</span></p>
+      <p style="font-size: 22px; margin-top: 2px;"><strong>警示</strong>：异步训练中标准 <span class="en">GRPO</span> 约 160 步即崩溃<span class="ref">[12]</span>——稳定性须与效率一起设计</p>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 10 · RESEARCH CONTENT 3 -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">02 · 研究内容三</span>
+  <h2>研究内容三：协同设计，闭合权重层自我改进回路</h2>
+  <div class="body">
+  <div class="row" style="gap: 48px; align-items: center;">
+    <svg class="dg" width="950" height="520" viewBox="0 0 950 520" aria-label="搜索回路与权重层学习回路">
+      <!-- model -->
+      <rect x="330" y="16" width="300" height="84" rx="6" class="box-green"/>
+      <text x="480" y="54" text-anchor="middle" font-size="27" class="t-strong">策略模型 <tspan class="en">π</tspan><tspan class="en" font-size="18" dy="6">θ</tspan></text>
+      <text x="480" y="86" text-anchor="middle" font-size="18" class="t-muted" dy="-0">现有：冻结　｜　本课题：持续更新</text>
+      <path d="M480 100 L480 122 M150 122 L380 122" class="ln"/>
+      <path d="M150 122 L150 156" class="ln" marker-end="url(#ah-gray)"/>
+      <path d="M380 122 L380 156" class="ln" marker-end="url(#ah-gray)"/>
+      <!-- search loop row -->
+      <rect x="60" y="160" width="180" height="76" rx="6" class="box-blue"/>
+      <text x="150" y="207" text-anchor="middle" font-size="26" class="t-blue t-strong">提议</text>
+      <rect x="290" y="160" width="180" height="76" rx="6" class="box-blue"/>
+      <text x="380" y="207" text-anchor="middle" font-size="26" class="t-blue t-strong">执行</text>
+      <rect x="520" y="160" width="180" height="76" rx="6" class="box-blue"/>
+      <text x="610" y="207" text-anchor="middle" font-size="26" class="t-blue t-strong">评估</text>
+      <rect x="750" y="160" width="180" height="76" rx="6" class="box-blue"/>
+      <text x="840" y="200" text-anchor="middle" font-size="26" class="t-blue t-strong">档案</text>
+      <text x="840" y="225" text-anchor="middle" font-size="16" class="t-muted">代码库 / 解的集合</text>
+      <path d="M240 198 L286 198" class="ln-blue" marker-end="url(#ah-blue)"/>
+      <path d="M470 198 L516 198" class="ln-blue" marker-end="url(#ah-blue)"/>
+      <path d="M700 198 L746 198" class="ln-blue" marker-end="url(#ah-blue)"/>
+      <path d="M800 236 L800 272 L150 272 L150 240" class="ln dash" marker-end="url(#ah-gray)"/>
+      <text x="475" y="300" text-anchor="middle" font-size="19" class="t-muted">筛选后复用 —— 搜索回路（现有，权重冻结）</text>
+      <!-- learning loop -->
+      <path d="M890 236 L890 336" class="ln-teal" marker-end="url(#ah-teal)"/>
+      <rect x="750" y="342" width="190" height="84" rx="6" class="box-accent-solid"/>
+      <text x="845" y="376" text-anchor="middle" font-size="22" class="t-strong">多版本经验</text>
+      <text x="845" y="408" text-anchor="middle" font-size="20" class="en">τ ~ π<tspan font-size="14" dy="5">θ1</tspan><tspan dy="-5">, …, π</tspan><tspan font-size="14" dy="5">θk</tspan></text>
+      <path d="M750 384 L654 384" class="ln-teal" marker-end="url(#ah-teal)"/>
+      <rect x="400" y="342" width="250" height="84" rx="6" class="box-accent-solid"/>
+      <text x="525" y="376" text-anchor="middle" font-size="22" class="t-strong">价值估计 + 异步 RL</text>
+      <text x="525" y="408" text-anchor="middle" font-size="18" class="t-muted">研究内容一 ＋ 二</text>
+      <path d="M400 384 L304 384" class="ln-teal" marker-end="url(#ah-teal)"/>
+      <rect x="60" y="342" width="240" height="84" rx="6" class="box-accent-solid"/>
+      <text x="180" y="376" text-anchor="middle" font-size="22" class="t-strong">更新权重</text>
+      <text x="180" y="408" text-anchor="middle" font-size="20" class="en">θ<tspan font-size="14" dy="5">k</tspan><tspan dy="-5"> → θ</tspan><tspan font-size="14" dy="5">k+1</tspan></text>
+      <path d="M60 384 L22 384 L22 58 L326 58" class="ln-teal" marker-end="url(#ah-teal)"/>
+      <text x="475" y="470" text-anchor="middle" font-size="22" class="t-teal t-strong">学习回路：经验 → 训练信号 → 权重（本课题）</text>
+    </svg>
+    <div class="col" style="width: 730px;">
+      <h3>协同设计</h3>
+      <ul class="small">
+        <li>系统的异步程度决定离策略偏差，进而决定价值估计与重要性修正的要求</li>
+        <li>单轨迹信号的需求，反过来决定采样与调度方式</li>
+      </ul>
+      <h3 style="margin-top: 12px;">场景验证</h3>
+      <ul class="small">
+        <li>回路中环境状态（代码库、解的档案）不断变化，同一状态往往只有一条反馈</li>
+        <li>用回路积累的多版本策略轨迹预训练价值模型，以 <span class="en">RL</span> 更新权重<span class="ref">[12,34]</span></li>
+        <li>对照冻结权重的回路，比较<strong>改进效率</strong>与<strong>最终效果</strong>；先在评估快的短任务验证，再扩展长度</li>
+      </ul>
+      <h3 style="margin-top: 12px;">安全约束</h3>
+      <ul class="small">
+        <li>可验证奖励作为信用分配的最终依据，评估器置于回路之外，抑制偏差放大与奖励投机</li>
+      </ul>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 11 · INNOVATIONS -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">02 · 创新点</span>
+  <h2>创新点</h2>
+  <div class="body">
+  <div class="innov">
+    <div class="hd">&nbsp;</div><div class="hd">&nbsp;</div><div class="hd">现有工作</div><div class="hd">&nbsp;</div><div class="hd">本课题</div>
+
+    <div class="cell"><span class="n">01</span></div>
+    <div class="cell"><span class="t">问题定位</span></div>
+    <div class="cell"><p class="old">冻结权重的<strong>搜索回路</strong>：在权重不变的前提下改进任务解、代码或探索策略</p></div>
+    <div class="cell"><span class="arrow" style="width: 100%;">→</span></div>
+    <div class="cell"><p class="new">权重层的<span class="highlight">学习回路</span>：把自我改进视为长程智能体任务，以「当前能力生成下一轮训练信号」组织算法与系统，使模型权重成为被持续改进的对象</p></div>
+
+    <div class="cell"><span class="n">02</span></div>
+    <div class="cell"><span class="t">信用分配</span></div>
+    <div class="cell"><p class="old"><strong>组内比较</strong> + 逐轮可验证奖励，包括申请人前期的轮次级方法 <span class="en">ET / CrEST</span></p></div>
+    <div class="cell"><span class="arrow" style="width: 100%;">→</span></div>
+    <div class="cell"><p class="new">基于<span class="highlight">状态价值</span>的长程信用分配：面向结构不一的智能体轨迹设计价值估计，以多版本策略经验训练并持续更新价值模型，单条轨迹获得低方差的步级信用</p></div>
+
+    <div class="cell"><span class="n">03</span></div>
+    <div class="cell"><span class="t">训练系统</span></div>
+    <div class="cell"><p class="old">单纯追求吞吐的异步系统；以同步训练为前提的算法改进——二者割裂</p></div>
+    <div class="cell"><span class="arrow" style="width: 100%;">→</span></div>
+    <div class="cell"><p class="new"><span class="highlight">算法—系统协同设计</span>：离策略修正、价值估计与异步经验生成作为整体设计，在稳定前提下提升长程训练效率，并闭合权重层回路</p></div>
+  </div>
+  <div class="callout" style="margin-top: 34px;">
+    <p>三点合起来回答一个问题：<strong>如何让模型权重以可接受的代价进入长程自我改进回路</strong>。</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 12 · FOUNDATION 1: ET + CrEST -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">03 · 研究基础与初步结果</span>
+  <h2>前期基础一：从环境反馈中稳定学习，细粒度信用分配</h2>
+  <div class="body">
+  <div class="grid2" style="gap: 48px;">
+    <div class="col">
+      <h3><span class="en">Environment Tuning</span>　<span class="tag">ICLR 2026 · 共同第一作者*</span></h3>
+      <img class="fig" src="assets/et_pipeline.png" alt="Environment Tuning 方法框架" style="width: 840px; height: 294px; margin-top: 4px;">
+      <div class="grid3" style="gap: 16px; margin-top: 18px;">
+        <div class="stat"><div class="num" style="font-size: 38px;">7.00→36.92</div><div class="cap">Qwen2.5-7B，BFCL V3 多轮准确率（%）</div></div>
+        <div class="stat"><div class="num" style="font-size: 38px;">54.34</div><div class="cap">watt-tool-8B，超过 GPT-4o 51.00、o3 49.25</div></div>
+        <div class="stat"><div class="num alt" style="font-size: 38px;">400</div><div class="cap">个问题实例训练，无需专家轨迹</div></div>
+      </div>
+      <p class="small" style="margin-top: 14px;">单阶段 <span class="en">GRPO</span> 仅 17.42%，约 70 步梯度爆炸；课程 + 环境增强 + 逐轮进度奖励使训练稳定<span class="ref">[13]</span></p>
+    </div>
+    <div class="col">
+      <h3><span class="en">CrEST</span>　<span class="tag">EMNLP 2026 主会 · 共同第一作者*</span></h3>
+      <div class="row" style="gap: 20px; margin-top: 4px; align-items: flex-start;">
+        <figure>
+          <img class="fig" src="assets/crest_training_curve.png" alt="CrEST 与 GRPO、OPSD 的训练准确率曲线" style="width: 452px; height: 300px;">
+          <figcaption>BFCL V3 训练曲线（Qwen3-4B）</figcaption>
+        </figure>
+        <div class="col grow" style="gap: 12px;">
+          <div class="stat"><div class="num" style="font-size: 38px;">52.00</div><div class="cap">Qwen3-4B，BFCL V3；GRPO 43.63 · 自蒸馏 OPSD 38.75</div></div>
+          <div class="stat"><div class="num alt" style="font-size: 38px;">13 / 14</div><div class="cap">项指标最佳或并列最佳（2 规模 × 2 基准）</div></div>
+        </div>
+      </div>
+      <p class="small" style="margin-top: 14px;"><strong>验证器定方向、自教师定幅度</strong>：仅轮次拆分 47.88、仅 token 调制 48.75，二者结合 52.00；约 20 步即超过 <span class="en">OPSD</span> 上限<span class="ref">[14]</span></p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 24px;">
+    <p><strong>启示</strong>：只有问题实例、没有专家轨迹时，模型能依靠环境反馈从自身经验中稳定学习——这正是自我改进的基本形态。<span class="muted">局限：依赖分组采样、轮次对齐与逐轮验证 → 研究内容一。</span></p>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 13 · FOUNDATION 2: AWORLD + ROTATIONS -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">03 · 研究基础与初步结果</span>
+  <h2>前期基础二：规模化经验生成与长程训练系统</h2>
+  <div class="body">
+  <div class="row" style="gap: 48px; align-items: flex-start;">
+    <div class="col" style="width: 900px;">
+      <h3><span class="en">AWorld</span>　<span class="tag">技术报告 · 共同第一作者*</span></h3>
+      <img class="fig" src="assets/aworld_arch.png" alt="AWorld 系统架构" style="width: 900px; height: 362px; margin-top: 4px;">
+      <div class="grid3" style="gap: 16px; margin-top: 18px;">
+        <div class="stat"><div class="num" style="font-size: 38px;">14.6×</div><div class="cap">一轮 rollout：7695 s → 525 s（分布式执行）</div></div>
+        <div class="stat"><div class="num" style="font-size: 38px;">32.23%</div><div class="cap">Qwen3-32B GAIA pass@1（原 21.59），超过 GPT-4o 27.91</div></div>
+        <div class="stat"><div class="num alt" style="font-size: 38px;">12→32</div><div class="cap">未参与训练的 xbench-DeepSearch，泛化提升</div></div>
+      </div>
+    </div>
+    <div class="col" style="width: 780px; gap: 16px;">
+      <h3>科研轮转　<span class="tag">导师 刘鹏飞 · 两项均为优秀</span></h3>
+      <div class="card" style="padding: 18px 24px;">
+        <p style="font-size: 25px;"><strong>真实场景 Agent Training</strong></p>
+        <p class="small" style="margin-top: 4px;">SWE 环境合成管线：智能体自动完成仓库探索、任务构建与验证，已稳定合成<strong>数十万</strong>可复现环境；仅用 900 余个环境的轨迹做 SFT，Qwen3-30B-A3B 在 SWE-bench Verified 达 <span class="highlight">57%</span></p>
+      </div>
+      <div class="card" style="padding: 18px 24px;">
+        <p style="font-size: 25px;"><strong>大模型 RL × infra 联合优化</strong></p>
+        <p class="small" style="margin-top: 4px;">异步多轮 RL 框架 <span class="en">siirl-agentic</span>（MPMD：数据调度 / 多轮 rollout / 分布式训练解耦）；打通 SWE-agent → E2B 沙箱链路，实现沙箱失效检测与重建；完成 Qwen3-4B/8B 的 SWE-bench GRPO 训练验证，改进均已合入主线</p>
+      </div>
+      <p class="small"><span class="tag">开源</span>　<span class="en">T3RL</span>：多轮训练中 log-prob、loss mask 与响应长度严格 token 级对齐</p>
+    </div>
+  </div>
+  <div class="flow" style="margin-top: 24px; gap: 12px;">
+    <span class="chip" style="border: none; background: none; padding-left: 0; color: var(--brand); font-weight: 500;">前期边界 → 出发点</span>
+    <span class="chip">依赖分组采样与逐轮验证 <span class="muted">→</span> <strong>研究内容一</strong></span>
+    <span class="chip">「先采样、后更新」的同步训练 <span class="muted">→</span> <strong>研究内容二</strong></span>
+    <span class="chip">任务长度中等 <span class="muted">→</span> <strong>研究内容三</strong></span>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 14 · EXPECTED OUTCOMES -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">04 · 预期成果与进度</span>
+  <h2>预期成果</h2>
+  <div class="body">
+  <div class="row" style="gap: 52px; align-items: center;">
+    <div class="grid2" style="width: 820px; gap: 20px;">
+      <div class="card blue lg" style="padding: 28px 30px;">
+        <div class="stat" style="background: none; border: none; padding: 0;"><div class="num" style="font-size: 56px;">3–4 篇</div></div>
+        <h3 style="margin-top: 6px; font-size: 30px;">学术论文</h3>
+        <p>人工智能领域高水平会议或期刊；每项研究内容至少 1 篇</p>
+      </div>
+      <div class="card blue lg" style="padding: 28px 30px;">
+        <div class="stat" style="background: none; border: none; padding: 0;"><div class="num" style="font-size: 56px;">1 套</div></div>
+        <h3 style="margin-top: 6px; font-size: 30px;">开源系统</h3>
+        <p>面向长程智能体的异步 RL 训练框架，配套训练代码与模型权重</p>
+      </div>
+      <div class="card blue lg" style="padding: 28px 30px;">
+        <div class="stat" style="background: none; border: none; padding: 0;"><div class="num" style="font-size: 56px;">2 项</div></div>
+        <h3 style="margin-top: 6px; font-size: 30px;">方法与原型</h3>
+        <p>单轨迹、终局奖励的长程信用分配方法；闭合权重层回路的自我改进系统原型</p>
+      </div>
+      <div class="card blue lg" style="padding: 28px 30px;">
+        <div class="stat" style="background: none; border: none; padding: 0;"><div class="num" style="font-size: 56px;">1 篇</div></div>
+        <h3 style="margin-top: 6px; font-size: 30px;">学位论文</h3>
+        <p>完成博士学位论文</p>
+      </div>
+    </div>
+    <div class="col" style="width: 860px;">
+      <h3>如何检验：每项内容都有明确的对照与指标</h3>
+      <table style="margin-top: 10px; font-size: 24px;">
+        <tr><th style="width: 23%;">研究内容</th><th style="width: 30%;">对照</th><th>核心指标</th></tr>
+        <tr><td><strong>一 · 信用分配</strong></td><td><span class="en">GRPO</span> 类；前期 <span class="en">ET / CrEST</span></td><td>样本效率（达到同等性能所需的环境交互量）· 最终性能</td></tr>
+        <tr><td><strong>二 · 训练系统</strong></td><td>同步训练</td><td>训练稳定性 · 单位时间有效训练样本量 · 墙钟时间</td></tr>
+        <tr><td><strong>三 · 自我改进</strong></td><td>冻结权重的回路</td><td>改进效率 · 最终效果</td></tr>
+      </table>
+      <div class="callout" style="margin-top: 22px;">
+        <p style="font-size: 24px;"><strong>评测基准</strong>：<span class="en">BFCL · τ²-bench · GAIA · SWE-bench</span>，均公开可用</p>
+        <p style="font-size: 24px; margin-top: 6px;"><strong>模型规模</strong>：前期已在 4B–32B 上完成 RL 训练，学院与团队算力可支撑同等规模实验</p>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 15 · SCHEDULE -->
+<!-- ============================================================ -->
+<section class="slide">
+  <span class="section-label">04 · 预期成果与进度</span>
+  <h2>研究进度安排</h2>
+  <div class="body">
+  <div class="gantt" style="grid-template-rows: auto repeat(6, 96px) auto;">
+    <div class="hd">阶段</div><div class="hd">2026.11 – 2030.06</div><div class="hd">阶段性成果</div>
+
+    <div class="lbl"><span>研究内容一：长程信用分配</span><span class="d">2026.11 – 2027.10</span></div>
+    <div class="trk"><span class="yr" style="left: 4.55%;"></span><span class="yr" style="left: 31.82%;"></span><span class="yr" style="left: 59.09%;"></span><span class="yr" style="left: 86.36%;"></span><span class="bar" style="left: 0%; width: 27.27%;"></span></div>
+    <div class="out">信用分配方法与对比验证；论文 1 篇</div>
+
+    <div class="lbl"><span>研究内容二：异步训练系统</span><span class="d">2027.05 – 2028.06</span></div>
+    <div class="trk"><span class="yr" style="left: 4.55%;"></span><span class="yr" style="left: 31.82%;"></span><span class="yr" style="left: 59.09%;"></span><span class="yr" style="left: 86.36%;"></span><span class="bar mid" style="left: 13.64%; width: 31.82%;"></span></div>
+    <div class="out">异步长程 RL 框架开源；论文 1 篇</div>
+
+    <div class="lbl"><span>研究内容三：协同设计与场景验证</span><span class="d">2028.01 – 2029.12</span></div>
+    <div class="trk"><span class="yr" style="left: 4.55%;"></span><span class="yr" style="left: 31.82%;"></span><span class="yr" style="left: 59.09%;"></span><span class="yr" style="left: 86.36%;"></span><span class="bar teal" style="left: 31.82%; width: 27.17%; border-radius: 3px 0 0 3px;">协同设计 · 短任务验证</span><span class="bar teal-deep" style="left: 59.09%; width: 27.27%; border-radius: 0 3px 3px 0;">长程闭环 · 对比冻结权重</span></div>
+    <div class="out">权重层回路原型；论文 1–2 篇</div>
+
+    <div class="lbl"><span>综合实验验证与成果整理</span><span class="d">2029.07 – 2029.12</span></div>
+    <div class="trk"><span class="yr" style="left: 4.55%;"></span><span class="yr" style="left: 31.82%;"></span><span class="yr" style="left: 59.09%;"></span><span class="yr" style="left: 86.36%;"></span><span class="bar green" style="left: 72.73%; width: 13.64%;"></span></div>
+    <div class="out">更大规模评测；发布代码与权重</div>
+
+    <div class="lbl"><span>学位论文撰写</span><span class="d">2030.01 – 2030.02</span></div>
+    <div class="trk"><span class="yr" style="left: 4.55%;"></span><span class="yr" style="left: 31.82%;"></span><span class="yr" style="left: 59.09%;"></span><span class="yr" style="left: 86.36%;"></span><span class="bar gray" style="left: 86.36%; width: 4.55%;"></span></div>
+    <div class="out">学位论文初稿</div>
+
+    <div class="lbl"><span>修改、预答辩、送审与答辩</span><span class="d">2030.03 – 2030.06</span></div>
+    <div class="trk"><span class="yr" style="left: 4.55%;"></span><span class="yr" style="left: 31.82%;"></span><span class="yr" style="left: 59.09%;"></span><span class="yr" style="left: 86.36%;"></span><span class="bar gray" style="left: 90.91%; width: 9.09%;"></span></div>
+    <div class="out">学位论文定稿，完成答辩</div>
+
+    <div></div>
+    <div class="axis"><span style="left: 4.55%;">2027</span><span style="left: 31.82%;">2028</span><span style="left: 59.09%;">2029</span><span style="left: 86.36%;">2030</span></div>
+    <div></div>
+  </div>
+  <div class="callout" style="margin-top: 22px;">
+    <p><strong>交叉安排</strong>：研究内容一形成方法原型后启动二，按价值估计的需求设计系统；异步框架可用后启动三，用两年完成短任务验证与长程闭环。</p>
+    <p style="margin-top: 4px;"><strong>当前进展</strong>：三项前期工作（<span class="en">ET · CrEST · AWorld</span>）已发表或公开，两项科研轮转已完成——研究内容一可于 2026.11 直接启动。</p>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 16 · CLOSING -->
+<!-- ============================================================ -->
+<section class="slide slide-closing">
+  <h2 style="margin-bottom: 26px;">谢谢各位老师</h2>
+  <hr class="rule" style="margin: 0 auto 34px; width: 120px;">
+  <p style="font-size: 30px; margin-bottom: 40px;">恳请批评指正</p>
+  <p style="font-family: var(--font-en); font-size: 22px; letter-spacing: 0.05em;">路思远 · lusiyuanzs@gmail.com · github.com/IcyFish332</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- BACKUP 1 · FEASIBILITY & RISKS -->
+<!-- ============================================================ -->
+<section class="slide backup">
+  <span class="section-label">备用 · 可行性与风险</span>
+  <h2>可行性分析与风险对策</h2>
+  <div class="body">
+  <div class="grid2" style="gap: 56px; margin-top: 12px; grid-template-columns: 1fr 1.1fr;">
+    <div class="col">
+      <h3>可行性</h3>
+      <ul class="small">
+        <li><strong>理论基础</strong>：策略梯度、优势估计与价值函数学习（PPO、GAE）及离策略重要性采样均有成熟理论；单轨迹优化与异步训练已有初步方法与实证<span class="ref">[10,12,37]</span></li>
+        <li><strong>前期基础</strong>：冷启动与稀疏奖励、细粒度信用分配、大规模经验生成三个环节均已验证，方法与代码可复用</li>
+        <li><strong>技术条件</strong>：熟悉 SGLang、vLLM 推理引擎与 verl、slime 训练框架；T3RL 作者、AWorld 贡献者</li>
+        <li><strong>计算资源</strong>：前期已在 4B–32B 模型上完成 RL 训练；依托团队与学院平台</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>风险与对策</h3>
+      <table>
+        <tr><th style="width: 32%;">风险</th><th>对策</th></tr>
+        <tr><td>长程价值函数难以训练</td><td>退回跨迭代、跨任务的统计式基线，或在价值估计与组内基线之间自适应切换</td></tr>
+        <tr><td>异步训练不稳定</td><td>限制数据陈旧度上限，采用更严格的 token 级裁剪，逐步放开异步程度</td></tr>
+        <tr><td>自我改进场景评估成本高</td><td>先在任务较短、评估较快的场景验证方法，再逐步扩展任务长度</td></tr>
+        <tr><td>出现新的训练范式</td><td>科学问题仍然成立，具体方法随之更新</td></tr>
+      </table>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- BACKUP 2 · CREDIT ASSIGNMENT LANDSCAPE -->
+<!-- ============================================================ -->
+<section class="slide backup">
+  <span class="section-label">备用 · 相关工作</span>
+  <h2>长程反馈下的信用分配：现有方法族对比</h2>
+  <div class="body">
+  <table style="margin-top: 16px; font-size: 23px;">
+    <tr><th style="width: 15%;">方法族</th><th style="width: 23%;">代表工作</th><th style="width: 13%;">需分组采样</th><th style="width: 17%;">信号粒度</th><th>主要局限</th></tr>
+    <tr><td><strong>组相对</strong></td><td class="en">GRPO · DAPO · GiGPO · MT-GRPO</td><td>是</td><td>轨迹 / 步 / 轮次</td><td>长程下组内同步等待、退化组；轮次级要求轮次对齐与逐轮验证<span class="ref">[9,20,25,26]</span></td></tr>
+    <tr><td><strong>教师信号</strong></td><td class="en">OPD · OPSD · CrEST</td><td>视方法而定</td><td><span class="en">token</span> 级</td><td>性能上限受教师约束；<span class="en">OPSD</span> 约 77% 梯度集中在前 5% 的 token；<span class="en">CrEST</span> 以验证器限定方向<span class="ref">[14,27,28]</span></td></tr>
+    <tr><td><strong>价值函数</strong></td><td class="en">PPO + GAE · VAPO</td><td>否</td><td><span class="en">token</span> / 步级</td><td>价值模型冷启动；长程、多轮智能体轨迹上拟合困难，缺乏系统验证<span class="ref">[29–31]</span></td></tr>
+    <tr><td><strong>单轨迹</strong></td><td class="en">SPO · BASIS · SR-PPO · SAO</td><td>否</td><td>轨迹 / <span class="en">token</span> 级</td><td>以跨迭代 / 批内统计或学习的价值替代组内基线；价值冷启动仍是瓶颈<span class="ref">[10,12,32,33]</span></td></tr>
+    <tr class="best"><td>本课题</td><td>状态价值 + 多版本经验预训练 + 统计基线兜底</td><td>否</td><td>智能体步级</td><td>面向非平稳、多策略的自我改进经验，与异步系统协同设计</td></tr>
+  </table>
+  <p class="small muted" style="margin-top: 20px;">连续控制中的证据：仅用单一策略数据预训练的价值函数与微调目标不匹配，需要多样策略的经验<span class="ref">[34]</span>——这正是自我改进回路天然积累的数据。</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- BACKUP 3 · REPRESENTATIVE SELF-IMPROVING SYSTEMS -->
+<!-- ============================================================ -->
+<section class="slide backup">
+  <span class="section-label">备用 · 代表性自我改进系统</span>
+  <h2>代表性系统：生成—验证—筛选—复用，权重冻结</h2>
+  <div class="body">
+  <div class="grid2" style="gap: 48px; margin-top: 12px; grid-template-columns: 0.9fr 1.1fr;">
+    <figure>
+      <img class="fig" src="assets/alphaevolve.png" alt="AlphaEvolve 工作流程" style="width: 100%; height: auto; max-height: 520px; object-fit: contain;">
+      <figcaption><span class="en">AlphaEvolve</span>：冻结的 LLM 集成生成代码 diff，评估器打分，程序数据库筛选复用<span class="ref">[4]</span>（图源：Novikov et al., 2025）</figcaption>
+    </figure>
+    <div class="col">
+      <figure>
+        <img class="fig" src="assets/dgm_conceptual.png" alt="Darwin Gödel Machine 示意" style="width: 100%; height: auto;">
+        <figcaption><span class="en">DGM</span>：编码智能体改写自身代码，基准评测后加入档案（图源：Zhang et al., 2025）<span class="ref">[5]</span></figcaption>
+      </figure>
+      <ul class="small" style="margin-top: 22px;">
+        <li><span class="term">AlphaEvolve</span>：4×4 复矩阵乘法 48 次标量乘法；优化了训练自身底层模型的计算内核</li>
+        <li><span class="term">DGM</span>：SWE-bench 20.0% → 50.0%；以基准结果作为改进有益的经验证据</li>
+        <li><span class="term">Dream-RSI</span>：把历史发现过程组织为回放模拟器，低成本改进探索策略<span class="ref">[6]</span></li>
+        <li>共同点：被改进的是任务解、智能体代码与探索策略，<strong>底层模型权重始终冻结</strong></li>
+      </ul>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- BACKUP 4 · RESULT TABLES (ET + CrEST) -->
+<!-- ============================================================ -->
+<section class="slide backup">
+  <span class="section-label">备用 · 初步实验结果</span>
+  <h2>初步实验结果：<span class="en">Environment Tuning</span> 与 <span class="en">CrEST</span></h2>
+  <div class="body">
+  <div class="grid2" style="gap: 56px; margin-top: 12px; grid-template-columns: 0.85fr 1.15fr;">
+    <div class="col">
+      <h3>表 1　<span class="en">BFCL V3</span> 多轮平均准确率（%）<span class="ref">[13]</span></h3>
+      <table>
+        <tr><th>基座模型</th><th class="num">训练前</th><th class="num">+ToolRL</th><th class="num">+ET</th></tr>
+        <tr><td class="en">Qwen2.5-7B-Instruct</td><td class="num">7.00</td><td class="num">18.00</td><td class="num"><strong>36.92</strong></td></tr>
+        <tr><td class="en">Llama-3.1-8B-Instruct</td><td class="num">5.48</td><td class="num">11.25</td><td class="num"><strong>28.25</strong></td></tr>
+        <tr><td class="en">ToolACE-2-Llama-3.1-8B</td><td class="num">37.99</td><td class="num">33.75</td><td class="num"><strong>47.18</strong></td></tr>
+        <tr><td class="en">watt-tool-8B</td><td class="num">35.74</td><td class="num">42.00</td><td class="num"><strong>54.34</strong></td></tr>
+      </table>
+      <p class="small muted" style="margin-top: 14px;">训练集 400 条（四类各 100），无专家轨迹；分布外 ACEBench：ToolACE-2 由 8.34 升至 15.00，直接 RL 降至 6.65。</p>
+    </div>
+    <div class="col">
+      <h3>表 2　<span class="en">CrEST</span> 与基线对比（%）<span class="ref">[14]</span></h3>
+      <table style="font-size: 21px;">
+        <tr><th>方法</th><th class="num">4B · BFCL</th><th class="num">4B · 会话</th><th class="num">8B · BFCL</th><th class="num">8B · 会话</th></tr>
+        <tr><td>基座模型</td><td class="num">22.12</td><td class="num">3.13</td><td class="num">33.38</td><td class="num">4.69</td></tr>
+        <tr><td class="en">GRPO</td><td class="num">43.63</td><td class="num">4.69</td><td class="num">43.25</td><td class="num">5.47</td></tr>
+        <tr><td class="en">MT-GRPO</td><td class="num">49.25</td><td class="num">6.25</td><td class="num">44.00</td><td class="num">7.03</td></tr>
+        <tr><td class="en">Environment Tuning</td><td class="num">47.25</td><td class="num">4.69</td><td class="num">46.00</td><td class="num">7.81</td></tr>
+        <tr><td class="en">OPD</td><td class="num">44.50</td><td class="num">6.25</td><td class="num">44.75</td><td class="num">3.91</td></tr>
+        <tr><td class="en">OPSD</td><td class="num">38.75</td><td class="num">4.69</td><td class="num">41.75</td><td class="num">3.91</td></tr>
+        <tr class="best"><td class="en">CrEST</td><td class="num">52.00</td><td class="num">7.03</td><td class="num">50.00</td><td class="num">9.38</td></tr>
+      </table>
+      <p class="small muted" style="margin-top: 14px;">会话：WildToolBench 会话级准确率；Qwen3-4B / 8B-Instruct，所有方法组大小 G = 16。</p>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- BACKUP 5 · AWORLD DETAILS -->
+<!-- ============================================================ -->
+<section class="slide backup">
+  <span class="section-label">备用 · 初步实验结果</span>
+  <h2>初步实验结果：<span class="en">AWorld</span> 规模化经验生成</h2>
+  <div class="body">
+  <div class="grid2" style="gap: 48px; margin-top: 12px;">
+    <figure>
+      <img class="fig" src="assets/aworld_pass_rate_rollouts.png" alt="GAIA 验证集通过率随 rollout 次数变化" style="width: 100%; height: auto;">
+      <figcaption>GAIA 验证集：通过率随 rollout 次数上升，GPT-4o 由 1 次的 27.3% 升至 32 次的 65.5%<span class="ref">[11]</span></figcaption>
+    </figure>
+    <div class="col">
+      <h3>表 3　一轮「采样—训练」耗时（秒）<span class="ref">[11]</span></h3>
+      <table>
+        <tr><th>执行方式</th><th class="num">rollout</th><th class="num">训练</th><th class="num">总耗时</th></tr>
+        <tr class="best"><td><span class="en">AWorld</span> 分布式执行器</td><td class="num">525</td><td class="num">144</td><td class="num">669</td></tr>
+        <tr><td>单节点顺序执行器</td><td class="num">7695</td><td class="num">144</td><td class="num">7839</td></tr>
+      </table>
+      <ul class="small" style="margin-top: 22px;">
+        <li>充足的经验生成是获得正向学习信号的前提</li>
+        <li>Qwen3-32B：先以 886 条成功轨迹 SFT 缓解冷启动，再以 GRPO 训练（每题 32 条轨迹）</li>
+        <li>GAIA 测试集 pass@1 由 21.59% 升至 32.23%，与 DeepSeek-V3（31.89%）相当；Level 3 达 16.33%，为所列模型最高</li>
+      </ul>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- BACKUP 6 · REFERENCES -->
+<!-- ============================================================ -->
+<section class="slide backup">
+  <span class="section-label">备用 · 参考文献</span>
+  <h2>主要参考文献 <span class="muted" style="font-size: 24px; font-weight: 400;">（编号与开题报告一致）</span></h2>
+  <div class="body">
+  <div class="grid2 en" style="gap: 48px; margin-top: 8px; font-size: 20px; line-height: 1.55; color: var(--ink-2);">
+    <div>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[1] Good. Speculations concerning the first ultraintelligent machine. 1966.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[3] Chan et al. What if automating AI R&amp;D triggers an intelligence explosion? 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[4] Novikov et al. AlphaEvolve: a coding agent for scientific and algorithmic discovery. 2025.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[5] Zhang et al. Darwin Gödel Machine: open-ended evolution of self-improving agents. 2025.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[6] Zheng et al. Dream-RSI: recursive self-improvement through evolving worlds. 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[7] Wang et al. ThetaEvolve: test-time learning on open problems. 2025.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[8] Yuksekgonul et al. Learning to discover at test time. 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[9] Shao et al. DeepSeekMath (GRPO). 2024.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[10] Xu &amp; Ding. Single-stream policy optimization. 2025.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[11] Yu*, Lu* et al. AWorld: orchestrating the training recipe for agentic AI. 2025.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[12] Hou et al. Single-rollout asynchronous optimization for agentic RL. 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[13] Lu*, Wang* et al. Don't just fine-tune the agent, tune the environment. ICLR 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[14] Wang*, Lu* et al. Teach the magnitude, not the direction. EMNLP 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[16] Hu, Lu, Clune. Automated design of agentic systems. ICLR 2025.</p>
+    </div>
+    <div>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[17] Zelikman et al. STaR: bootstrapping reasoning with reasoning. NeurIPS 2022.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[18] Huang et al. R-Zero: self-evolving reasoning LLM from zero data. ICLR 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[20] Yu et al. DAPO. 2025.　[25] Feng et al. GiGPO. 2025.　[26] Wei et al. MT-GRPO. 2025.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[27] Lu, Thinking Machines Lab. On-policy distillation. 2025.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[28] Zhao et al. Self-distilled reasoner (OPSD). 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[29] Schulman et al. Proximal policy optimization. 2017.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[30] Schulman et al. Generalized advantage estimation. ICLR 2016.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[31] Yue et al. VAPO. 2025.　[32] Gong et al. BASIS. 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[33] Che et al. Learning with a single rollout via Monte Carlo Pass@k critic. 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[34] Dong et al. Do you really need to pretrain Q-functions for online RL fine-tuning? 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[37] Fu et al. AReaL: large-scale asynchronous RL for language reasoning. 2025.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">[Weng, 2026] Weng. Harness engineering for self-improvement. Lil'Log, 2026.</p>
+      <p style="font-size: 20px; color: inherit; line-height: 1.6;">Yudkowsky. Artificial intelligence as a positive and negative factor in global risk. 2008.</p>
+    </div>
+  </div>
+  </div>
+</section>
+
+</div><!-- /deck -->
+
+
+<script>
+(function() {
+  const deck = document.getElementById('deck');
+  const slides = document.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const navHint = document.getElementById('navHint');
+  const timerEl = document.getElementById('timer');
+  const total = slides.length;
+  let current = 0;
+  let overviewEl = null;
+
+  // Page labels: main slides count "n / N"; backup slides read "备用 k".
+  const mainCount = Array.prototype.filter.call(slides, function(s) { return !s.classList.contains('backup'); }).length;
+  let mainIdx = 0, backupIdx = 0;
+  slides.forEach(function(s) {
+    if (s.classList.contains('backup')) s.dataset.num = '备用 ' + (++backupIdx);
+    else s.dataset.num = (++mainIdx) + ' / ' + mainCount;
+  });
+
+  function fit() {
+    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    deck.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    progress.style.width = ((current + 1) / total * 100) + '%';
+    history.replaceState(null, '', '#slide=' + (current + 1));
+    if (current > 0 && navHint) { navHint.style.display = 'none'; }
+  }
+
+  // Rehearsal timer: 15-minute hard limit, turns red after 14:00
+  let timerStart = null, timerId = null;
+  function toggleTimer() {
+    if (timerId) {
+      clearInterval(timerId); timerId = null; timerStart = null;
+      timerEl.classList.remove('on', 'warn');
+      return;
+    }
+    timerStart = Date.now();
+    timerEl.textContent = '00:00';
+    timerEl.classList.add('on');
+    timerId = setInterval(function() {
+      const sec = Math.floor((Date.now() - timerStart) / 1000);
+      const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+      const ss = String(sec % 60).padStart(2, '0');
+      timerEl.textContent = mm + ':' + ss;
+      timerEl.classList.toggle('warn', sec >= 14 * 60);
+    }, 500);
+  }
+
+  // Overview grid
+  function buildOverview() {
+    if (overviewEl) { openOverview(); return; }
+    overviewEl = document.createElement('div');
+    overviewEl.className = 'overview-overlay';
+
+    var header = document.createElement('div');
+    header.className = 'overview-header';
+    header.innerHTML = '<h2>Slide Overview</h2><span class="overview-close">ESC / G to close</span>';
+    header.querySelector('.overview-close').addEventListener('click', closeOverview);
+    overviewEl.appendChild(header);
+
+    var grid = document.createElement('div');
+    grid.className = 'overview-grid';
+
+    for (var i = 0; i < total; i++) {
+      (function(idx) {
+        var thumb = document.createElement('div');
+        thumb.className = 'overview-thumb';
+        thumb.dataset.idx = idx;
+
+        var inner = document.createElement('div');
+        inner.className = 'overview-thumb-inner';
+        var clone = slides[idx].cloneNode(true);
+        clone.classList.add('active');
+        clone.style.position = 'relative';
+        clone.style.transition = 'none';
+        inner.appendChild(clone);
+        thumb.appendChild(inner);
+
+        var label = document.createElement('div');
+        label.className = 'overview-thumb-label';
+        var title = slides[idx].querySelector('h1, h2');
+        label.textContent = slides[idx].dataset.num + (title ? '  —  ' + title.textContent.replace(/\s+/g, ' ').substring(0, 28) : '');
+        thumb.appendChild(label);
+
+        thumb.addEventListener('click', function() {
+          goTo(idx);
+          closeOverview();
+        });
+        grid.appendChild(thumb);
+      })(i);
+    }
+
+    overviewEl.appendChild(grid);
+    document.body.appendChild(overviewEl);
+    openOverview();
+  }
+
+  function openOverview() {
+    var thumbs = overviewEl.querySelectorAll('.overview-thumb');
+    thumbs.forEach(function(t) { t.classList.toggle('is-current', parseInt(t.dataset.idx) === current); });
+    overviewEl.classList.add('open');
+    requestAnimationFrame(function() {
+      var firstThumb = overviewEl.querySelector('.overview-thumb');
+      if (firstThumb) {
+        var scale = firstThumb.offsetWidth / 1920;
+        overviewEl.querySelectorAll('.overview-thumb-inner').forEach(function(el) {
+          el.style.transform = 'scale(' + scale + ')';
+        });
+        overviewEl.querySelectorAll('.overview-thumb').forEach(function(el) {
+          el.style.height = (1080 * scale) + 'px';
+        });
+      }
+      var cur = overviewEl.querySelector('.is-current');
+      if (cur) cur.scrollIntoView({ block: 'center', behavior: 'instant' });
+    });
+  }
+
+  function closeOverview() {
+    if (overviewEl) overviewEl.classList.remove('open');
+  }
+
+  function isOverviewOpen() {
+    return overviewEl && overviewEl.classList.contains('open');
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (isOverviewOpen()) {
+      if (e.key === 'Escape' || e.key === 'g' || e.key === 'G') {
+        e.preventDefault(); closeOverview();
+      }
+      return;
+    }
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault(); goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault(); goTo(current - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault(); goTo(0);
+    } else if (e.key === 'End') {
+      e.preventDefault(); goTo(mainCount - 1);
+    } else if (e.key === 'g' || e.key === 'G') {
+      e.preventDefault(); buildOverview();
+    } else if (e.key === 't' || e.key === 'T') {
+      e.preventDefault(); toggleTimer();
+    } else if (e.key === 'Escape') {
+      e.preventDefault(); closeOverview();
+    }
+  });
+
+  // Touch support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', function(e) {
+    if (isOverviewOpen()) return;
+    touchStartX = e.touches[0].clientX;
+  });
+  document.addEventListener('touchend', function(e) {
+    if (isOverviewOpen()) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { dx < 0 ? goTo(current + 1) : goTo(current - 1); }
+  });
+
+  // Click on right/left side (skip links)
+  document.addEventListener('click', function(e) {
+    if (isOverviewOpen()) return;
+    if (e.target.closest('a')) return;
+    if (e.clientX > window.innerWidth * 0.6) goTo(current + 1);
+    else if (e.clientX < window.innerWidth * 0.4) goTo(current - 1);
+  });
+
+  var hashMatch = location.hash.match(/slide=(\d+)/);
+  var startSlide = hashMatch ? Math.max(0, Math.min(parseInt(hashMatch[1]) - 1, total - 1)) : 0;
+  goTo(startSlide);
+})();
+</script>
+</body>
+</html>
