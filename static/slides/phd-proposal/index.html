@@ -590,6 +590,16 @@
   .timer.on { display: block; }
   .timer.warn { background: rgba(185,66,58,0.92); }
 
+  /* Black screen (B or ., the blank button on most presenter remotes) */
+  .blackout {
+    position: fixed;
+    inset: 0;
+    background: #000000;
+    z-index: 300;
+    display: none;
+  }
+  .blackout.on { display: block; }
+
   /* Overview grid */
   .overview-overlay {
     position: fixed;
@@ -670,7 +680,7 @@
       transition: none;
       break-after: page;
     }
-    .progress-bar, .nav-hint, .timer, .overview-overlay { display: none !important; }
+    .progress-bar, .nav-hint, .timer, .blackout, .overview-overlay { display: none !important; }
   }
 </style>
 </head>
@@ -679,6 +689,7 @@
 <div class="progress-bar" id="progress"></div>
 <div class="nav-hint" id="navHint"><span class="key">F</span>全屏放映　·　<span class="key">← →</span>翻页　·　<span class="key">G</span>总览　·　<span class="key">T</span>计时</div>
 <div class="timer" id="timer">00:00</div>
+<div class="blackout" id="blackout"></div>
 
 <div class="deck" id="deck">
 
@@ -1747,6 +1758,7 @@
   const progress = document.getElementById('progress');
   const navHint = document.getElementById('navHint');
   const timerEl = document.getElementById('timer');
+  const blackoutEl = document.getElementById('blackout');
   const total = slides.length;
   let current = 0;
   let overviewEl = null;
@@ -1925,16 +1937,33 @@
     return overviewEl && overviewEl.classList.contains('open');
   }
 
+  function isBlank() {
+    return blackoutEl.classList.contains('on');
+  }
+
+  // Presenter remotes send PageDown / PageUp (some models send arrow keys), F5
+  // and Esc from the start button, and B or . from the blank button. The keys
+  // follow PowerPoint's slide show bindings, which these remotes are built for.
+  const NEXT_KEYS = ['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter', 'n', 'N'];
+  const PREV_KEYS = ['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace', 'p', 'P'];
+
   document.addEventListener('keydown', function(e) {
+    // Leave browser shortcuts (Cmd+P, Ctrl+R, ...) alone
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (isOverviewOpen()) {
       if (e.key === 'Escape' || e.key === 'g' || e.key === 'G') {
         e.preventDefault(); closeOverview();
       }
       return;
     }
-    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    if (isBlank()) {
+      // Any key brings the slide back without moving on
+      e.preventDefault(); blackoutEl.classList.remove('on');
+      return;
+    }
+    if (NEXT_KEYS.includes(e.key)) {
       e.preventDefault(); goTo(current + 1);
-    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    } else if (PREV_KEYS.includes(e.key)) {
       e.preventDefault(); goTo(current - 1);
     } else if (e.key === 'Home') {
       e.preventDefault(); goTo(0);
@@ -1944,8 +1973,13 @@
       e.preventDefault(); buildOverview();
     } else if (e.key === 't' || e.key === 'T') {
       e.preventDefault(); toggleTimer();
-    } else if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey) {
+    } else if (e.key === 'f' || e.key === 'F') {
       e.preventDefault(); toggleFullscreen();
+    } else if (e.key === 'F5') {
+      // Start button: enter full screen instead of reloading the page
+      e.preventDefault(); if (!isFullscreen()) toggleFullscreen();
+    } else if (e.key === 'b' || e.key === 'B' || e.key === '.') {
+      e.preventDefault(); blackoutEl.classList.add('on');
     } else if (e.key === 'Escape') {
       e.preventDefault(); closeOverview();
     }
@@ -1958,7 +1992,7 @@
     touchStartX = e.touches[0].clientX;
   });
   document.addEventListener('touchend', function(e) {
-    if (isOverviewOpen()) return;
+    if (isOverviewOpen() || isBlank()) return;
     const dx = e.changedTouches[0].clientX - touchStartX;
     if (Math.abs(dx) > 50) { dx < 0 ? goTo(current + 1) : goTo(current - 1); }
   });
@@ -1966,6 +2000,7 @@
   // Click on right/left side (skip links)
   document.addEventListener('click', function(e) {
     if (isOverviewOpen()) return;
+    if (isBlank()) { blackoutEl.classList.remove('on'); return; }
     if (e.target.closest('a')) return;
     if (e.clientX > window.innerWidth * 0.6) goTo(current + 1);
     else if (e.clientX < window.innerWidth * 0.4) goTo(current - 1);
