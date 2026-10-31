@@ -14,9 +14,9 @@ hideSummary: true
 showtoc: false
 ---
 
-Hello! I'm **Siyuan Lu**, a PhD student in Computer Science and Technology through a joint program between [Zhejiang University](https://www.zju.edu.cn/english/), [Westlake University](https://en.westlake.edu.cn), and [Shanghai Innovation Institute](https://www.sii.edu.cn/). I am honored to be part of the institute's second PhD cohort, working under the supervision of [Prof. Tao LIN](https://tlin-taolin.github.io) from Westlake University and [Prof. Pengfei Liu](http://pfliu.com/) from [Generative Artificial Intelligence Research Lab](https://plms.ai//).
+Hello! I'm **Siyuan Lu**, a PhD student in Computer Science and Technology through a joint program between [Zhejiang University](https://www.zju.edu.cn/english/), [Westlake University](https://en.westlake.edu.cn), and [Shanghai Innovation Institute](https://www.sii.edu.cn/). I am honored to be part of the institute's second PhD cohort, working under the supervision of [Prof. Tao LIN](https://tlin-taolin.github.io) from Westlake University.
 
-I recently graduated from [Beijing University of Post and Telecommunications](https://www.bupt.edu.cn/) with a Bachelor's degree in Internet of Things Engineering through a joint program with [Queen Mary University of London](https://www.qmul.ac.uk/).
+I earned my Bachelor's degree in Internet of Things Engineering from [Beijing University of Post and Telecommunications](https://www.bupt.edu.cn/) through a joint program with [Queen Mary University of London](https://www.qmul.ac.uk/), and have since been working on post-training and reinforcement learning for LLM agents across industry and academic labs.
 
 🔭 **My long-term research goal**: Based on a well-modeled world model of the physical world 🌍, build a self-evolving agent system 🤖 which can continuously receive multi-modal feedback 📄🎨🎥 (e.g., text, audio, images, video, 3D data) from the world 🌏 and adapt to its changing environment 🌟.
 
@@ -105,12 +105,12 @@ You can find the full list of my publications [here](/publication/).
 
 ### 🎓 Education
 
-- **Westlake University & Zhejiang University Co-PhD Promgram**
+- **Westlake University & Zhejiang University Co-PhD Program**
   
   - Ph.D. in Computer Science and Technology (2025.09 - )
   - *Degree Granted By:* Zhejiang University
 
-- **Beijing University of Post and Telecommunications & Queen Marry University of London Joint Program**
+- **Beijing University of Post and Telecommunications & Queen Mary University of London Joint Program**
   
   - Bachelor in Internet of Things (2021.09 - 2025.06)
   - *Score:* **90.97/100** (*Rank:* **7/182**) 
